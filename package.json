@@ -1,14 +1,14 @@
 {
-  "name": "my_site",
+  "name": "chess_openings",
   "version": "0.0.1",
-  "description": "Showcase site",
+  "description": "Learn chess openings",
   "main": "index.js",
   "scripts": {
     "build": "webpack -d",
     "build:prod": "webpack -p",
     "watch": "webpack -wd"
   },
-  "author": "The amazing me",
+  "author": "Sam Judge",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.6.2",
@@ -43,6 +43,7 @@
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
+    "redux-saga": "^1.1.3",
     "saga": "^4.0.0-alpha",
     "sass": "^1.24.4"
   }
