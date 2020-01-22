@@ -2,19 +2,22 @@ import React from 'react'
 import styles from './styles'
 import { css } from 'aphrodite'
 import { connect } from 'react-redux'
-
-import { select, movePiece } from '../../actions/movePiece'
 import { bindActionCreators } from 'redux'
 
+import { select, movePiece } from '../../actions/movePiece'
+import validateMove from '../../helpers/validate_move'
+
 const Square = props => {
-    const { id, squareColorStr, pieceStr, select, selected, movePiece, board } = { ...props }
+    const { id, squareColorStr, pieceStr, select, movePiece, board } = { ...props }
     const squareColor = squareColorStr === 'white' ? '#e4e8d2' : '#c4cf92'
 
-
     const tryMovePiece = () => {
-        const selected = board.selected
-        if (board[id] === null && selected !== null) {
-            movePiece(board[selected], selected, id)
+        const piece = board[board.selected]
+        const from = board.selected
+        const to = id
+        if (board[id] === null && piece !== null) {
+            validateMove(board, piece, from, to)
+            movePiece(piece, from, to)
         }
     }
 
@@ -65,7 +68,6 @@ const Square = props => {
 
 const mapStateToProps = (state) => {
     return {
-        selected: state.selected,
         board: state.board
     }
 }
