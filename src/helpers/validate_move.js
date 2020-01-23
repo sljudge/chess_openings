@@ -67,6 +67,53 @@ function validateMove(board, piece, from, to) {
     }
     console.log(populateMatrix(board))
 
+    const rookMoves = () => {
+        // vertical move
+        if (fromX === toX) {
+            console.log('rook vertical')
+            //up
+            if (fromY > toY) {
+                console.log('rook up')
+                for (let i = fromY - 1; i > toY; i--) {
+                    console.log(i)
+                    if (boardMatrix[i][fromX] === 1) {
+                        return false
+                    }
+                } return true
+            }
+            //down
+            else if (fromY < toY) {
+                console.log('rook down')
+                for (let i = fromY + 1; i < toY; i++) {
+                    if (boardMatrix[i][fromX] === 1) {
+                        return false
+                    }
+                } return true
+            }
+        }
+        //horizontal move
+        else if (fromY === toY) {
+            //right
+            if (fromX < toX) {
+                for (let i = fromX + 1; i < toX; i++) {
+                    if (boardMatrix[fromY][i] === 1) {
+                        return false
+                    }
+                } return true
+            }
+            //left
+            else if (fromX > toX) {
+                for (let i = fromX - 1; i > toX; i--) {
+                    if (boardMatrix[fromX][i] === 1) {
+                        return false
+                    }
+                } return true
+            }
+        } else {
+            return false
+        }
+    }
+
     const pawnMoves = () => {
         /*
             Complete except en passant
@@ -98,7 +145,7 @@ function validateMove(board, piece, from, to) {
             }
         }
         //taking move - right || left
-        else if (fromX > 0 && toX - fromX === 1 || fromX < 7 && fromX - toX === 1) {
+        else if (toX - fromX === 1 && fromX < 7 || fromX - toX === 1 && fromX > 0) {
             //check if there is a piece to take
             if (boardMatrix[toY][toX] === 1) {
                 //check only one ahead
@@ -130,6 +177,6 @@ function validateMove(board, piece, from, to) {
 
 }
 
-console.log(validateMove(board, 'P', 'a2', 'a4'))
+console.log(validateMove(board, 'p', 'a2', 'a4'))
 
 export default validateMove

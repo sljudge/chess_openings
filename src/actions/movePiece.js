@@ -9,9 +9,8 @@ export const movePiece = (piece, from, to) => ({
 })
 
 export const select = (piece) => {
-    console.log('SELECT', piece)
     return ({
         type: SELECT,
-        id: piece
+        id: piece,
     })
 }

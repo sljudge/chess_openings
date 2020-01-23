@@ -8,8 +8,6 @@ import { Board } from './Board'
 const App = props => {
     const { board } = { ...props }
 
-    console.log('props: ', props.board)
-
     return (
         <Container>
             <Board board={board} />

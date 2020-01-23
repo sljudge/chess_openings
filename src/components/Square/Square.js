@@ -12,12 +12,22 @@ const Square = props => {
     const squareColor = squareColorStr === 'white' ? '#e4e8d2' : '#c4cf92'
 
     const tryMovePiece = () => {
-        const piece = board[board.selected]
         const from = board.selected
         const to = id
-        if (piece !== null) {
-            if (validateMove(board, piece, from, to)) {
-                movePiece(piece, from, to)
+        const piece = board[from]
+        const toMove = board.toMove
+        const targetPiece = board[id]
+        if (piece !== null && piece !== undefined) {
+            const pieceColor = piece.toUpperCase() === piece ? 'white' : 'black'
+            //check if it's the correct player to go
+            if (toMove === pieceColor) {
+                //you can't take your own color
+                if (targetPiece === null || pieceColor === 'white' && targetPiece.toLowerCase() === targetPiece || pieceColor === 'black' && targetPiece.toUpperCase() === board[id]) {
+                    // ensure pieces move as they should
+                    if (validateMove(board, piece, from, to)) {
+                        movePiece(piece, from, to)
+                    }
+                }
             }
         }
     }
