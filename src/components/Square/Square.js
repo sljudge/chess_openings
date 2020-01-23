@@ -12,27 +12,34 @@ const Square = props => {
     const squareColor = squareColorStr === 'white' ? '#e4e8d2' : '#c4cf92'
 
     const tryMovePiece = () => {
+        //Moving from (...) to (...)
         const from = board.selected
         const to = id
+        //Current piece selected
         const piece = board[from]
+        //White or black to move
         const toMove = board.toMove
+        // Piece being targeted on move
         const targetPiece = board[id]
         if (piece !== null && piece !== undefined) {
             const pieceColor = piece.toUpperCase() === piece ? 'white' : 'black'
             //check if it's the correct player to go
             if (toMove === pieceColor) {
                 //you can't take your own color
-                if (targetPiece === null || pieceColor === 'white' && targetPiece.toLowerCase() === targetPiece || pieceColor === 'black' && targetPiece.toUpperCase() === board[id]) {
-                    // ensure pieces move as they should
+                if (targetPiece === null || pieceColor === 'white' && targetPiece.toLowerCase() === targetPiece || pieceColor === 'black' && targetPiece.toUpperCase() === targetPiece) {
+                    // ensure pieces move as they should and get response -> true/false/object with special cases
                     let response = validateMove(board, piece, from, to)
                     console.log('RESPONSE: ', response)
-                    //castle king side
+                    //SUCCESS
                     if (response === true) {
                         movePiece(piece, from, to)
-                    } else if (response === false) {
+                    }
+                    // FAILED
+                    else if (response === false) {
                         console.log('THIS PIECE CANNOT BE MOVED THERE')
-                    } else if (response.castle[pieceColor].kingSide === true) {
-                        console.log('castled')
+                    }
+                    // CASTLE KING SIDE
+                    else if (response.castle[pieceColor].kingSide === true) {
                         castleKingSide()
 
                     }
