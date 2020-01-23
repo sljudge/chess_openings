@@ -114,6 +114,90 @@ function validateMove(board, piece, from, to) {
         }
     }
 
+    const knightMoves = () => {
+        const possibleMoves = [
+            [fromX - 2, fromY - 1],
+            [fromX - 2, fromY + 1],
+            [fromX - 1, fromY - 2],
+            [fromX - 1, fromY + 2],
+            [fromX + 1, fromY - 2],
+            [fromX + 1, fromY + 2],
+            [fromX + 2, fromY - 1],
+            [fromX + 2, fromY + 1]
+        ]
+        for (let move of possibleMoves) {
+            if (move[0] === toX && move[1] === toY) {
+                return true
+            }
+        }
+        return false
+    }
+
+    const bishopMoves = () => {
+        //determine if white or black square bishop
+        let color
+        if (fromY & 1 && fromX & 1 || !fromY & 1 && !fromX & 1) {
+            color = 'white'
+        } else {
+            color = 'black'
+        }
+        console.log('bishop color: ', color)
+        //check for straight diagonal: right & down || left & down || right & up || left & up
+        if (toX - fromX === toY - fromY || toX + fromX === fromY - toY || fromX - toX === toY - fromY || fromX - toX === fromY - toY) {
+            //check for collisions
+            //right & down
+            if (toX > fromX && toY > fromY) {
+                for (let x = fromX + 1, y = fromY + 1; x < toX; x++ , y++) {
+                    if (boardMatrix[y][x] === 1) {
+                        return false
+                    }
+                } return true
+            }
+            //left & down
+            else if (toX < fromX && toY > fromY) {
+                for (let x = fromX - 1, y = fromY + 1; x > toX; x-- , y++) {
+                    if (boardMatrix[y][x] === 1) {
+                        return false
+                    }
+                } return true
+            }
+            //right & up
+            else if (toX > fromX && toY < fromY) {
+                for (let x = fromX + 1, y = fromY - 1; x > toX; x++ , y--) {
+                    if (boardMatrix[y][x] === 1) {
+                        return false
+                    }
+                } return true
+            }
+            //left and up
+            else if (toX < fromX && toY < fromY) {
+                for (let x = fromX - 1, y = fromY - 1; x > toX; x-- , y--) {
+                    if (boardMatrix[y][x] === 1) {
+                        return false
+                    }
+                } return true
+            }
+        } else {
+            return false
+        }
+    }
+
+    const queenMoves = () => {
+        if (rookMoves() || bishopMoves()) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    const kingMoves = () => {
+        if (Math.abs(toX - fromX) <= 1 && Math.abs(toY - fromY) <= 1) {
+            return true
+        } else {
+            return false
+        }
+    }
+
     const pawnMoves = () => {
         /*
             Complete except en passant
