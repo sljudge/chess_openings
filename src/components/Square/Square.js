@@ -4,11 +4,11 @@ import { css } from 'aphrodite'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { select, movePiece } from '../../actions/movePiece'
+import { select, movePiece, castleKingSide } from '../../actions/movePiece'
 import validateMove from '../../helpers/validate_move'
 
 const Square = props => {
-    const { id, squareColorStr, pieceStr, select, movePiece, board } = { ...props }
+    const { id, squareColorStr, pieceStr, select, movePiece, castleKingSide, board } = { ...props }
     const squareColor = squareColorStr === 'white' ? '#e4e8d2' : '#c4cf92'
 
     const tryMovePiece = () => {
@@ -24,8 +24,17 @@ const Square = props => {
                 //you can't take your own color
                 if (targetPiece === null || pieceColor === 'white' && targetPiece.toLowerCase() === targetPiece || pieceColor === 'black' && targetPiece.toUpperCase() === board[id]) {
                     // ensure pieces move as they should
-                    if (validateMove(board, piece, from, to)) {
+                    let response = validateMove(board, piece, from, to)
+                    console.log('RESPONSE: ', response)
+                    //castle king side
+                    if (response === true) {
                         movePiece(piece, from, to)
+                    } else if (response === false) {
+                        console.log('THIS PIECE CANNOT BE MOVED THERE')
+                    } else if (response.castle[pieceColor].kingSide === true) {
+                        console.log('castled')
+                        castleKingSide()
+
                     }
                 }
             }
@@ -85,7 +94,8 @@ const mapStateToProps = (state) => {
 const mapActionsToProps = (dispatch, props) => {
     return bindActionCreators({
         select: select,
-        movePiece: movePiece
+        movePiece: movePiece,
+        castleKingSide: castleKingSide
     }, dispatch)
 }
 const mergeProps = (propsFromState, propsFromDispatch, ownProps) => {
