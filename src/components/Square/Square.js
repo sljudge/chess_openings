@@ -15,9 +15,10 @@ const Square = props => {
         const piece = board[board.selected]
         const from = board.selected
         const to = id
-        if (board[id] === null && piece !== null) {
-            validateMove(board, piece, from, to)
-            movePiece(piece, from, to)
+        if (piece !== null) {
+            if (validateMove(board, piece, from, to)) {
+                movePiece(piece, from, to)
+            }
         }
     }
 
