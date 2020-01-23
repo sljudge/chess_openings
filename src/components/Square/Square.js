@@ -4,11 +4,11 @@ import { css } from 'aphrodite'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { select, movePiece, castleKingSide } from '../../actions/movePiece'
+import { select, movePiece, castleKingSide, castleQueenSide, enPassant } from '../../actions/movePiece'
 import validateMove from '../../helpers/validate_move'
 
 const Square = props => {
-    const { id, squareColorStr, pieceStr, select, movePiece, castleKingSide, board } = { ...props }
+    const { id, squareColorStr, pieceStr, select, movePiece, castleKingSide, castleQueenSide, enPassant, board } = { ...props }
     const squareColor = squareColorStr === 'white' ? '#e4e8d2' : '#c4cf92'
 
     const tryMovePiece = () => {
@@ -30,6 +30,7 @@ const Square = props => {
                     // ensure pieces move as they should and get response -> true/false/object with special cases
                     let response = validateMove(board, piece, from, to)
                     console.log('RESPONSE: ', response)
+                    console.log('--------------------------------------------------')
                     //SUCCESS
                     if (response === true) {
                         movePiece(piece, from, to)
@@ -39,9 +40,16 @@ const Square = props => {
                         console.log('THIS PIECE CANNOT BE MOVED THERE')
                     }
                     // CASTLE KING SIDE
-                    else if (response.castle[pieceColor].kingSide === true) {
-                        castleKingSide()
-
+                    else if (response.castledKingSide) {
+                        castleKingSide(to)
+                    }
+                    // CASTLE QUEEN SIDE
+                    else if (response.castledQueenSide) {
+                        castleQueenSide(to)
+                    }
+                    //EN PASSANT
+                    else if (response.enPassant) {
+                        enPassant(from, to)
                     }
                 }
             }
@@ -102,7 +110,9 @@ const mapActionsToProps = (dispatch, props) => {
     return bindActionCreators({
         select: select,
         movePiece: movePiece,
-        castleKingSide: castleKingSide
+        castleKingSide: castleKingSide,
+        castleQueenSide: castleQueenSide,
+        enPassant: enPassant,
     }, dispatch)
 }
 const mergeProps = (propsFromState, propsFromDispatch, ownProps) => {
