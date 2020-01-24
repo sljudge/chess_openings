@@ -1,7 +1,7 @@
 import convertAlphToNum from './convertAlphToNum'
 import convertNum from './convertNum'
 
-function validateMove(board, piece, from, to) {
+function validateMove(board, castle, piece, from, to) {
     console.log(piece, from, to)
     //Color
     const color = piece === piece.toUpperCase() ? 'white' : 'black'
@@ -10,12 +10,7 @@ function validateMove(board, piece, from, to) {
     const fromY = convertNum(from[1])
     const toX = convertAlphToNum(to[0])
     const toY = convertNum(to[1])
-    //Special cases
-    const { check, enPassant, castle } = { ...board }
 
-    console.log('CHECK: ', check)
-    console.log('EN PASSANT: ', enPassant)
-    console.log('CASTLE: ', castle)
     console.log('____________________________________')
 
 
@@ -182,21 +177,27 @@ function validateMove(board, piece, from, to) {
             return true
         }
         //KING SIDE CASTLE
-        else if (to === 'g1' || to === 'g8' && castle[color].kingSide === null) {
-            //check to see if way is clear *****NEED TO ADD LINE OF CHECK
-            if (color === 'white' && [boardMatrix[7][5], boardMatrix[7][6]].every(x => x === 0) || color === 'black' && [boardMatrix[0][5], boardMatrix[0][6]].every(x => x === 0)) {
-                // update special cases and return response
-                return {
-                    castledKingSide: true
+        if (castle[color].kingSide === null) {
+            if (to === 'g1' || to === 'g8') {
+                console.log('KING SIDE', castle)
+                console.log('KING SIDE', color)
+                //check to see if way is clear *****NEED TO ADD LINE OF CHECK
+                if (color === 'white' && [boardMatrix[7][5], boardMatrix[7][6]].every(x => x === 0) || color === 'black' && [boardMatrix[0][5], boardMatrix[0][6]].every(x => x === 0)) {
+                    // update special cases and return response
+                    return {
+                        castledKingSide: true
+                    }
                 }
             }
         }
         // QUEEN SIDE CASTLE
-        else if (to === 'c1' || to === 'c8' && castle[color].queenSide === null) {
-            //check to see if way is clear *****NEED TO ADD LINE OF CHECK
-            if (color === 'white' && [boardMatrix[7][1], boardMatrix[7][2], boardMatrix[7][3]].every(x => x === 0) || color === 'black' && [boardMatrix[0][1], boardMatrix[0][2], boardMatrix[0][3]].every(x => x === 0)) {
-                return {
-                    castledQueenSide: true
+        if (castle[color].queenSide === null) {
+            if (to === 'c1' || to === 'c8') {
+                //check to see if way is clear *****NEED TO ADD LINE OF CHECK
+                if (color === 'white' && [boardMatrix[7][1], boardMatrix[7][2], boardMatrix[7][3]].every(x => x === 0) || color === 'black' && [boardMatrix[0][1], boardMatrix[0][2], boardMatrix[0][3]].every(x => x === 0)) {
+                    return {
+                        castledQueenSide: true
+                    }
                 }
             }
         }
@@ -211,7 +212,7 @@ function validateMove(board, piece, from, to) {
 
     const pawnMoves = () => {
         //EN PASSANT
-        if (enPassant === to) {
+        if (board.enPassant === to) {
             //check only one ahead
             if (color === 'white') {
                 return fromY - toY === 1 && Math.abs(fromX - toX) === 1 ? { enPassant: true } : false
@@ -269,19 +270,6 @@ function validateMove(board, piece, from, to) {
     //////////////////////////////////////////////////////////// 
 
     populateMatrix(board)
-
-    const inCheck = () => {
-        const kingPosition = board.check[color].kingPosition
-        let temp = Array.from(boardMatrix)
-        console.log(toY, toX)
-        console.log(temp === boardMatrix)
-        temp[toY][toX] = 1
-        // temp[fromY][fromX] = 0
-        console.log('temp', temp)
-        console.log(kingPosition)
-        console.log('board matrix', boardMatrix)
-    }
-    console.log(inCheck())
 
 
     switch (piece.toLowerCase()) {

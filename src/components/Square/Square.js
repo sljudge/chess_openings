@@ -8,7 +8,7 @@ import { select, movePiece, castleKingSide, castleQueenSide, enPassant } from '.
 import validateMove from '../../helpers/validate_move'
 
 const Square = props => {
-    const { id, squareColorStr, pieceStr, select, movePiece, castleKingSide, castleQueenSide, enPassant, board } = { ...props }
+    const { id, squareColorStr, pieceStr, select, movePiece, castleKingSide, castleQueenSide, enPassant, board, castle } = { ...props }
     const squareColor = squareColorStr === 'white' ? '#e4e8d2' : '#c4cf92'
 
     const tryMovePiece = () => {
@@ -28,12 +28,12 @@ const Square = props => {
                 //you can't take your own color
                 if (targetPiece === null || pieceColor === 'white' && targetPiece.toLowerCase() === targetPiece || pieceColor === 'black' && targetPiece.toUpperCase() === targetPiece) {
                     // ensure pieces move as they should and get response -> true/false/object with special cases
-                    let response = validateMove(board, piece, from, to)
+                    let response = validateMove(board, castle, piece, from, to)
                     console.log('RESPONSE: ', response)
                     console.log('--------------------------------------------------')
                     //SUCCESS
                     if (response === true) {
-                        movePiece(piece, from, to)
+                        movePiece(toMove, piece, from, to)
                     }
                     // FAILED
                     else if (response === false) {
@@ -41,11 +41,11 @@ const Square = props => {
                     }
                     // CASTLE KING SIDE
                     else if (response.castledKingSide) {
-                        castleKingSide(to)
+                        castleKingSide(to, toMove)
                     }
                     // CASTLE QUEEN SIDE
                     else if (response.castledQueenSide) {
-                        castleQueenSide(to)
+                        castleQueenSide(to, toMove)
                     }
                     //EN PASSANT
                     else if (response.enPassant) {
@@ -103,7 +103,8 @@ const Square = props => {
 
 const mapStateToProps = (state) => {
     return {
-        board: state.board
+        board: state.board,
+        castle: state.castle
     }
 }
 const mapActionsToProps = (dispatch, props) => {
