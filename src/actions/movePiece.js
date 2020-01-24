@@ -11,6 +11,7 @@ export const movePiece = (piece, from, to) => ({
     to: to
 })
 
+
 export const select = (piece) => {
     return ({
         type: SELECT,

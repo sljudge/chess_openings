@@ -16,8 +16,12 @@ function validateMove(board, piece, from, to) {
     console.log('CHECK: ', check)
     console.log('EN PASSANT: ', enPassant)
     console.log('CASTLE: ', castle)
-    console.log(enPassant === to)
+    console.log('____________________________________')
 
+
+    ///////////////////////////////////////    
+    //////////     MATRIX     /////////////
+    ///////////////////////////////////////    
     const boardMatrix = [
         [0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0],
@@ -39,7 +43,10 @@ function validateMove(board, piece, from, to) {
             boardMatrix[j][i % 8] = board[key] === null ? 0 : 1
         }
     }
-    populateMatrix(board)
+
+    ///////////////////////////////////////    
+    //////////     ROOK     /////////////
+    ///////////////////////////////////////    
 
     const rookMoves = () => {
         // vertical move
@@ -84,6 +91,10 @@ function validateMove(board, piece, from, to) {
         }
     }
 
+    ///////////////////////////////////////    
+    //////////     KNIGHT     /////////////
+    ///////////////////////////////////////    
+
     const knightMoves = () => {
         const possibleMoves = [
             [fromX - 2, fromY - 1],
@@ -102,6 +113,10 @@ function validateMove(board, piece, from, to) {
         }
         return false
     }
+
+    ///////////////////////////////////////    
+    //////////     BISHOP     /////////////
+    ///////////////////////////////////////    
 
     const bishopMoves = () => {
         //check for straight diagonal: right & down || left & down || right & up || left & up
@@ -146,6 +161,10 @@ function validateMove(board, piece, from, to) {
         }
     }
 
+    ///////////////////////////////////////    
+    //////////     QUEEN     /////////////
+    ///////////////////////////////////////    
+
     const queenMoves = () => {
         if (rookMoves() || bishopMoves()) {
             return true
@@ -154,9 +173,12 @@ function validateMove(board, piece, from, to) {
         }
     }
 
+    ///////////////////////////////////////    
+    //////////     KING     /////////////
+    ///////////////////////////////////////    
+
     const kingMoves = () => {
         if (Math.abs(toX - fromX) <= 1 && Math.abs(toY - fromY) <= 1) {
-            //update special cases and return response
             return true
         }
         //KING SIDE CASTLE
@@ -183,10 +205,13 @@ function validateMove(board, piece, from, to) {
         }
     }
 
+    ///////////////////////////////////////    
+    //////////     PAWN     /////////////
+    ///////////////////////////////////////    
+
     const pawnMoves = () => {
         //EN PASSANT
         if (enPassant === to) {
-            console.log('passing')
             //check only one ahead
             if (color === 'white') {
                 return fromY - toY === 1 && Math.abs(fromX - toX) === 1 ? { enPassant: true } : false
@@ -239,17 +264,41 @@ function validateMove(board, piece, from, to) {
         }
     }
 
+    ////////////////////////////////////////////////////////////    
+    ////////////////////     RETURN     ////////////////////////
+    //////////////////////////////////////////////////////////// 
+
+    populateMatrix(board)
+
+    const inCheck = () => {
+        const kingPosition = board.check[color].kingPosition
+        let temp = Array.from(boardMatrix)
+        console.log(toY, toX)
+        console.log(temp === boardMatrix)
+        temp[toY][toX] = 1
+        // temp[fromY][fromX] = 0
+        console.log('temp', temp)
+        console.log(kingPosition)
+        console.log('board matrix', boardMatrix)
+    }
+    console.log(inCheck())
+
 
     switch (piece.toLowerCase()) {
-        case 'r': return rookMoves(boardMatrix, piece, from, to)
-        case 'n': return knightMoves(boardMatrix, piece, from, to)
-        case 'b': return bishopMoves(boardMatrix, piece, from, to)
-        case 'q': return queenMoves(boardMatrix, piece, from, to)
-        case 'k': return kingMoves(boardMatrix, piece, from, to)
-        case 'p': return pawnMoves(boardMatrix, piece, from, to)
+        case 'r':
+            return rookMoves(boardMatrix, piece, from, to);
+        case 'n':
+            return knightMoves(boardMatrix, piece, from, to);
+        case 'b':
+            return bishopMoves(boardMatrix, piece, from, to);
+        case 'q':
+            return queenMoves(boardMatrix, piece, from, to);
+        case 'k':
+            return kingMoves(boardMatrix, piece, from, to);
+        case 'p':
+            return pawnMoves(boardMatrix, piece, from, to);
         default: return null
     }
 
 }
-
 export default validateMove
