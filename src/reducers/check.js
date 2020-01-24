@@ -1,17 +1,18 @@
 import {
     MOVE_PIECE,
     CASTLE_KING_SIDE,
-    CASTLE_QUEEN_SIDE
+    CASTLE_QUEEN_SIDE,
 } from '../actions/movePiece'
+import { SET_CHECK } from '../actions/setCheck'
 
 const initialState = {
     white: {
         kingPosition: 'e1',
-        attack: []
+        attack: {}
     },
     black: {
         kingPosition: 'e5',
-        attack: []
+        attack: {}
     }
 }
 
@@ -42,6 +43,15 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 kingPosition: action.to
+            }
+        // -------------------------------------------------------------------------------
+        case SET_CHECK:
+            return {
+                ...state,
+                [action.toMove]: {
+                    kingPosition: action.kingPosition,
+                    attack: action.attack
+                }
             }
         // -------------------------------------------------------------------------------
         default:

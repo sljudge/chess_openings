@@ -1,43 +1,19 @@
 import convertAlphToNum from './convertAlphToNum'
 import convertNum from './convertNum'
+import createMatrix from './createMatrix'
 
 function validateMove(board, castle, piece, from, to) {
-    console.log(piece, from, to)
-    //Color
     const color = piece === piece.toUpperCase() ? 'white' : 'black'
     //Co-ordinates
     const fromX = convertAlphToNum(from[0])
     const fromY = convertNum(from[1])
     const toX = convertAlphToNum(to[0])
     const toY = convertNum(to[1])
+    //Matrix
+    const boardMatrix = createMatrix(board)
+
 
     console.log('____________________________________')
-
-
-    ///////////////////////////////////////    
-    //////////     MATRIX     /////////////
-    ///////////////////////////////////////    
-    const boardMatrix = [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-    ]
-
-    const populateMatrix = (board) => {
-        const keys = Object.keys(board)
-        for (let i = 0, j = 0; i < 64; i++) {
-            if (i > 0 && i % 8 === 0) {
-                j++
-            }
-            const key = keys[i]
-            boardMatrix[j][i % 8] = board[key] === null ? 0 : 1
-        }
-    }
 
     ///////////////////////////////////////    
     //////////     ROOK     /////////////
@@ -241,9 +217,6 @@ function validateMove(board, castle, piece, from, to) {
     ////////////////////////////////////////////////////////////    
     ////////////////////     RETURN     ////////////////////////
     //////////////////////////////////////////////////////////// 
-
-    populateMatrix(board)
-
 
     switch (piece.toLowerCase()) {
         case 'r':

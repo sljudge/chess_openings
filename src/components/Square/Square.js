@@ -4,20 +4,38 @@ import { css } from 'aphrodite'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { select, movePiece, castleKingSide, castleQueenSide, enPassant } from '../../actions/movePiece'
-import validateMove from '../../helpers/validate_move'
+import { movePiece, selectPiece, castleKingSide, castleQueenSide, enPassant } from '../../actions/movePiece'
+import { setCheck } from '../../actions/setCheck'
+import validateMove from '../../helpers/validateMove'
+import isInCheck from '../../helpers/isInCheck'
 
 const Square = props => {
-    const { id, squareColorStr, pieceStr, select, movePiece, castleKingSide, castleQueenSide, enPassant, board, castle } = { ...props }
+    /////////////// PROPS   ////////////////////////////
+    const { id, squareColorStr, pieceStr, selectPiece, movePiece, castleKingSide, castleQueenSide, enPassant, board, castle, check, setCheck } = { ...props }
+    /////////////// BOARD   ////////////////////////////
     const squareColor = squareColorStr === 'white' ? '#e4e8d2' : '#c4cf92'
+    const from = board.selected //Moving from (...) to (...)
+    const to = id
+    const toMove = board.toMove //White or black to move
+    /////////////// PIECES   ////////////////////////////
+    const piece = board[from] //Current piece selected
+    const targetPiece = board[id]// Piece being targeted on move
+    const kingPosition = check[toMove].kingPosition
+
+    const onSelect = () => {
+
+        const inCheck = isInCheck(toMove, kingPosition, board, to)
+        console.log(Object.keys(inCheck).length, 'LENGTH')
+        console.log(Object.keys(inCheck))
+        if (Object.keys(inCheck).length > 0) {
+            console.log('PLAYER IS IN CHECK: ', inCheck)
+            setCheck(toMove, inCheck, kingPosition, id)
+        } else {
+            selectPiece(id)
+        }
+    }
 
     const tryMovePiece = () => {
-
-        const from = board.selected //Moving from (...) to (...)
-        const to = id
-        const piece = board[from] //Current piece selected
-        const toMove = board.toMove //White or black to move
-        const targetPiece = board[id]// Piece being targeted on move
 
         if (piece !== null && piece !== undefined) {
             const pieceColor = piece.toUpperCase() === piece ? 'white' : 'black'
@@ -44,38 +62,38 @@ const Square = props => {
         }
     }
 
-    let piece, pieceColor
+    let type, typeColor
     if (pieceStr !== null) {
-        pieceColor = pieceStr === pieceStr.toUpperCase() ? '#808080' : '#1e1e1e'
+        typeColor = pieceStr === pieceStr.toUpperCase() ? '#808080' : '#1e1e1e'
         switch (pieceStr.toLowerCase()) {
-            case 'r': piece = (
+            case 'r': type = (
                 <div className={css(styles.piece)}>
-                    <i className="fas fa-chess-rook" style={{ color: pieceColor }} onClick={() => select(id)} />
+                    <i className="fas fa-chess-rook" style={{ color: typeColor }} onClick={() => onSelect()} />
                 </div>
             ); break;
-            case 'n': piece = (
+            case 'n': type = (
                 <div className={css(styles.piece)}>
-                    <i className="fas fa-chess-knight" style={{ color: pieceColor }} onClick={() => select(id)} />
+                    <i className="fas fa-chess-knight" style={{ color: typeColor }} onClick={() => onSelect()} />
                 </div>
             ); break;
-            case 'b': piece = (
+            case 'b': type = (
                 <div className={css(styles.piece)}>
-                    <i className="fas fa-chess-bishop" style={{ color: pieceColor }} onClick={() => select(id)} />
+                    <i className="fas fa-chess-bishop" style={{ color: typeColor }} onClick={() => onSelect()} />
                 </div>
             ); break;
-            case 'q': piece = (
+            case 'q': type = (
                 <div className={css(styles.piece)}>
-                    <i className="fas fa-chess-queen" style={{ color: pieceColor }} onClick={() => select(id)} />
+                    <i className="fas fa-chess-queen" style={{ color: typeColor }} onClick={() => onSelect()} />
                 </div>
             ); break;
-            case 'k': piece = (
+            case 'k': type = (
                 <div className={css(styles.piece)}>
-                    <i className="fas fa-chess-king" style={{ color: pieceColor }} onClick={() => select(id)} />
+                    <i className="fas fa-chess-king" style={{ color: typeColor }} onClick={() => onSelect()} />
                 </div>
             ); break;
-            case 'p': piece = (
+            case 'p': type = (
                 <div className={css(styles.piece)}>
-                    <i className="fas fa-chess-pawn" style={{ color: pieceColor }} onClick={() => select(id)} />
+                    <i className="fas fa-chess-pawn" style={{ color: typeColor }} onClick={() => onSelect()} />
                 </div>
             ); break;
             default: null
@@ -84,7 +102,7 @@ const Square = props => {
 
     return (
         <div id={id} className={css(styles.square)} style={{ backgroundColor: squareColor }} onClick={() => tryMovePiece()}>
-            {piece}
+            {type}
         </div >
     )
 }
@@ -92,16 +110,18 @@ const Square = props => {
 const mapStateToProps = (state) => {
     return {
         board: state.board,
-        castle: state.castle
+        castle: state.castle,
+        check: state.check
     }
 }
 const mapActionsToProps = (dispatch, props) => {
     return bindActionCreators({
-        select: select,
-        movePiece: movePiece,
-        castleKingSide: castleKingSide,
-        castleQueenSide: castleQueenSide,
-        enPassant: enPassant,
+        selectPiece,
+        movePiece,
+        castleKingSide,
+        castleQueenSide,
+        enPassant,
+        setCheck
     }, dispatch)
 }
 const mergeProps = (propsFromState, propsFromDispatch, ownProps) => {

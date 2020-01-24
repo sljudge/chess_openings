@@ -1,5 +1,5 @@
 export const MOVE_PIECE = 'MOVE_PIECE'
-export const SELECT = 'SELECT'
+export const SELECT_PIECE = 'SELECT_PIECE'
 export const CASTLE_KING_SIDE = 'CASTLE_KING_SIDE'
 export const CASTLE_QUEEN_SIDE = 'CASTLE_QUEEN_SIDE'
 export const EN_PASSANT = 'EN_PASSANT'
@@ -51,9 +51,10 @@ export const movePiece = (toMove, piece, from, to) => {
 }
 
 
-export const select = (piece) => {
+export const selectPiece = (piece) => {
+    console.log('being watched', piece)
     return ({
-        type: SELECT,
+        type: SELECT_PIECE,
         id: piece,
     })
 }
