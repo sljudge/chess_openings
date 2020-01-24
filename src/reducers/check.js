@@ -10,7 +10,7 @@ const initialState = {
         attack: []
     },
     black: {
-        kingPosition: 'e8',
+        kingPosition: 'e5',
         attack: []
     }
 }

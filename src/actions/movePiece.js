@@ -38,14 +38,14 @@ export const movePiece = (toMove, piece, from, to) => {
     }
     return ({
         type: MOVE_PIECE,
-        toMove: toMove,
-        piece: piece,
-        from: from,
-        to: to,
+        toMove,
+        piece,
+        from,
+        to,
         enPassant,
-        kingPosition: kingPosition,
-        kingSide: kingSide,
-        queenSide: queenSide
+        kingPosition,
+        kingSide,
+        queenSide
 
     })
 }
@@ -60,18 +60,19 @@ export const select = (piece) => {
 
 export const castleKingSide = (to, toMove) => ({
     type: CASTLE_KING_SIDE,
-    to: to,
-    toMove: toMove
+    to,
+    toMove
 })
 
 export const castleQueenSide = (to, toMove) => ({
     type: CASTLE_QUEEN_SIDE,
-    to: to,
-    toMove: toMove
+    to,
+    toMove
 })
 
-export const enPassant = (from, to) => ({
+export const enPassant = (from, to, toMove) => ({
     type: EN_PASSANT,
-    from: from,
-    to: to
+    from,
+    to,
+    toMove
 })

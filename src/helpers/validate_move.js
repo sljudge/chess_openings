@@ -114,7 +114,7 @@ function validateMove(board, castle, piece, from, to) {
     ///////////////////////////////////////    
 
     const bishopMoves = () => {
-        //check for straight diagonal: right & down || left & down || right & up || left & up
+        //check for straight diagonal
         if (Math.abs(toX - fromX) === Math.abs(toY - fromY) || Math.abs(fromX - toX) === Math.abs(toY - fromY)) {
             //check for collisions
             //right & down
@@ -177,27 +177,20 @@ function validateMove(board, castle, piece, from, to) {
             return true
         }
         //KING SIDE CASTLE
-        if (castle[color].kingSide === null) {
-            if (to === 'g1' || to === 'g8') {
-                console.log('KING SIDE', castle)
-                console.log('KING SIDE', color)
-                //check to see if way is clear *****NEED TO ADD LINE OF CHECK
-                if (color === 'white' && [boardMatrix[7][5], boardMatrix[7][6]].every(x => x === 0) || color === 'black' && [boardMatrix[0][5], boardMatrix[0][6]].every(x => x === 0)) {
-                    // update special cases and return response
-                    return {
-                        castledKingSide: true
-                    }
+        if (castle[color].kingSide === null && to === 'g1' || to === 'g8') {
+            //check to see if way is clear *****NEED TO ADD LINE OF CHECK
+            if (color === 'white' && [boardMatrix[7][5], boardMatrix[7][6]].every(x => x === 0) || color === 'black' && [boardMatrix[0][5], boardMatrix[0][6]].every(x => x === 0)) {
+                return {
+                    castledKingSide: true
                 }
             }
         }
         // QUEEN SIDE CASTLE
-        if (castle[color].queenSide === null) {
-            if (to === 'c1' || to === 'c8') {
-                //check to see if way is clear *****NEED TO ADD LINE OF CHECK
-                if (color === 'white' && [boardMatrix[7][1], boardMatrix[7][2], boardMatrix[7][3]].every(x => x === 0) || color === 'black' && [boardMatrix[0][1], boardMatrix[0][2], boardMatrix[0][3]].every(x => x === 0)) {
-                    return {
-                        castledQueenSide: true
-                    }
+        if (castle[color].queenSide === null && to === 'c1' || to === 'c8') {
+            //check to see if way is clear *****NEED TO ADD LINE OF CHECK
+            if (color === 'white' && [boardMatrix[7][1], boardMatrix[7][2], boardMatrix[7][3]].every(x => x === 0) || color === 'black' && [boardMatrix[0][1], boardMatrix[0][2], boardMatrix[0][3]].every(x => x === 0)) {
+                return {
+                    castledQueenSide: true
                 }
             }
         }
@@ -213,12 +206,8 @@ function validateMove(board, castle, piece, from, to) {
     const pawnMoves = () => {
         //EN PASSANT
         if (board.enPassant === to) {
-            //check only one ahead
-            if (color === 'white') {
-                return fromY - toY === 1 && Math.abs(fromX - toX) === 1 ? { enPassant: true } : false
-            } else {
-                return toY - fromY === 1 && Math.abs(fromX - toX) === 1 ? { enPassant: true } : false
-            }
+            //check only one ahead and one to side 
+            return Math.abs(fromX - toX) === 1 && Math.abs(fromY - toY) === 1 ? { enPassant: true } : false
         }
         //NON-TAKING MOVE
         else if (fromX === toX) {
@@ -226,38 +215,22 @@ function validateMove(board, castle, piece, from, to) {
             if (boardMatrix[toY][toX] !== 1) {
                 //double or single move
                 if (color === 'white') {
-                    if (fromY === 6 && toY === 4) {
-                        return true
-                    } else if (fromY - toY === 1) {
-                        return true
-                    } else {
-                        return false
-                    }
+                    return fromY === 6 && toY === 4 || fromY - toY === 1 ? true : false
                 } else {
-                    if (fromY === 1 && toY === 3) {
-                        return true
-                    } else if (toY - fromY === 1) {
-                        return true
-                    } else {
-                        return false
-                    }
+                    return fromY === 1 && toY === 3 || toY - fromY === 1 ? true : false
                 }
             } else {
                 return false
             }
         }
         //TAKING MOVE LEFT || RIGHT
-        else if (Math.abs(toX - fromX) === 1) {
-            //check if there is a piece to take
-            if (boardMatrix[toY][toX] === 1) {
-                //check only one ahead
-                if (color === 'white') {
-                    return fromY - toY === 1 ? true : false
-                } else {
-                    return toY - fromY === 1 ? true : false
-                }
+        //check if there is a piece to take and adjacent
+        else if (Math.abs(toX - fromX) === 1 && boardMatrix[toY][toX] === 1) {
+            //check only one ahead
+            if (color === 'white') {
+                return fromY - toY === 1 ? true : false
             } else {
-                return false
+                return toY - fromY === 1 ? true : false
             }
         }
         else {

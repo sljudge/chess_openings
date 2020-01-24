@@ -12,15 +12,13 @@ const Square = props => {
     const squareColor = squareColorStr === 'white' ? '#e4e8d2' : '#c4cf92'
 
     const tryMovePiece = () => {
-        //Moving from (...) to (...)
-        const from = board.selected
+
+        const from = board.selected //Moving from (...) to (...)
         const to = id
-        //Current piece selected
-        const piece = board[from]
-        //White or black to move
-        const toMove = board.toMove
-        // Piece being targeted on move
-        const targetPiece = board[id]
+        const piece = board[from] //Current piece selected
+        const toMove = board.toMove //White or black to move
+        const targetPiece = board[id]// Piece being targeted on move
+
         if (piece !== null && piece !== undefined) {
             const pieceColor = piece.toUpperCase() === piece ? 'white' : 'black'
             //check if it's the correct player to go
@@ -32,25 +30,15 @@ const Square = props => {
                     console.log('RESPONSE: ', response)
                     console.log('--------------------------------------------------')
                     //SUCCESS
-                    if (response === true) {
-                        movePiece(toMove, piece, from, to)
-                    }
+                    if (response === true) { movePiece(toMove, piece, from, to) }
                     // FAILED
-                    else if (response === false) {
-                        console.log('THIS PIECE CANNOT BE MOVED THERE')
-                    }
+                    else if (response === false) { console.log('THIS PIECE CANNOT BE MOVED THERE') }
                     // CASTLE KING SIDE
-                    else if (response.castledKingSide) {
-                        castleKingSide(to, toMove)
-                    }
+                    else if (response.castledKingSide) { castleKingSide(to, toMove) }
                     // CASTLE QUEEN SIDE
-                    else if (response.castledQueenSide) {
-                        castleQueenSide(to, toMove)
-                    }
+                    else if (response.castledQueenSide) { castleQueenSide(to, toMove) }
                     //EN PASSANT
-                    else if (response.enPassant) {
-                        enPassant(from, to)
-                    }
+                    else if (response.enPassant) { enPassant(from, to, toMove) }
                 }
             }
         }
