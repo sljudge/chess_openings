@@ -7,14 +7,14 @@ import {
 } from '../actions/movePiece'
 
 const initialState = {
-    a8: 'r', b8: null, c8: 'R', d8: null, e8: null, f8: null, g8: 'r', h8: null,
-    a7: null, b7: null, c7: null, d7: null, e7: null, f7: null, g7: null, h7: 'p',
+    a8: 'r', b8: null, c8: null, d8: null, e8: 'R', f8: null, g8: 'r', h8: null,
+    a7: null, b7: null, c7: null, d7: null, e7: null, f7: 'N', g7: null, h7: 'p',
     a6: null, b6: null, c6: null, d6: null, e6: null, f6: null, g6: null, h6: null,
-    a5: null, b5: null, c5: null, d5: null, e5: 'k', f5: null, g5: 'P', h5: null,
+    a5: 'R', b5: null, c5: 'p', d5: null, e5: 'k', f5: null, g5: 'P', h5: null,
     a4: null, b4: 'Q', c4: null, d4: null, e4: 'p', f4: null, g4: null, h4: null,
-    a3: null, b3: null, c3: null, d3: null, e3: null, f3: null, g3: 'P', h3: null,
-    a2: 'P', b2: null, c2: 'P', d2: 'P', e2: 'P', f2: 'P', g2: 'B', h2: 'P',
-    a1: 'R', b1: 'N', c1: 'B', d1: null, e1: 'K', f1: null, g1: null, h1: 'R',
+    a3: null, b3: null, c3: null, d3: null, e3: null, f3: 'P', g3: null, h3: null,
+    a2: 'P', b2: 'B', c2: 'P', d2: 'P', e2: null, f2: null, g2: 'B', h2: 'P',
+    a1: null, b1: 'N', c1: null, d1: null, e1: 'K', f1: null, g1: null, h1: null,
     selected: null,
     toMove: 'black',
     enPassant: null

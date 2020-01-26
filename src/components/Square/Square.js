@@ -25,8 +25,6 @@ const Square = props => {
     const onSelect = () => {
 
         const inCheck = isInCheck(toMove, kingPosition, board, to)
-        console.log(Object.keys(inCheck).length, 'LENGTH')
-        console.log(Object.keys(inCheck))
         if (Object.keys(inCheck).length > 0) {
             console.log('PLAYER IS IN CHECK: ', inCheck)
             setCheck(toMove, inCheck, kingPosition, id)

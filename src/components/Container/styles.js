@@ -7,6 +7,7 @@ export default StyleSheet.create({
         alignItems: "center",
         width: '100vw',
         height: '100vh',
-        backgroundImage: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)',
+        // backgroundImage: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)',
+        backgroundColor: '#1e1e1e'
     }
 })

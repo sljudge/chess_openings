@@ -12,7 +12,6 @@ function validateMove(board, castle, piece, from, to) {
     //Matrix
     const boardMatrix = createMatrix(board)
 
-
     console.log('____________________________________')
 
     ///////////////////////////////////////    
@@ -91,7 +90,7 @@ function validateMove(board, castle, piece, from, to) {
 
     const bishopMoves = () => {
         //check for straight diagonal
-        if (Math.abs(toX - fromX) === Math.abs(toY - fromY) || Math.abs(fromX - toX) === Math.abs(toY - fromY)) {
+        if (Math.abs(toX - fromX) === Math.abs(toY - fromY)) {
             //check for collisions
             //right & down
             if (toX > fromX && toY > fromY) {
@@ -153,7 +152,7 @@ function validateMove(board, castle, piece, from, to) {
             return true
         }
         //KING SIDE CASTLE
-        if (castle[color].kingSide === null && to === 'g1' || to === 'g8') {
+        if (!castle.inCheck && castle[color].kingSide === null && to === 'g1' || to === 'g8') {
             //check to see if way is clear *****NEED TO ADD LINE OF CHECK
             if (color === 'white' && [boardMatrix[7][5], boardMatrix[7][6]].every(x => x === 0) || color === 'black' && [boardMatrix[0][5], boardMatrix[0][6]].every(x => x === 0)) {
                 return {
@@ -162,7 +161,7 @@ function validateMove(board, castle, piece, from, to) {
             }
         }
         // QUEEN SIDE CASTLE
-        if (castle[color].queenSide === null && to === 'c1' || to === 'c8') {
+        if (!castle.inCheck && castle[color].queenSide === null && to === 'c1' || to === 'c8') {
             //check to see if way is clear *****NEED TO ADD LINE OF CHECK
             if (color === 'white' && [boardMatrix[7][1], boardMatrix[7][2], boardMatrix[7][3]].every(x => x === 0) || color === 'black' && [boardMatrix[0][1], boardMatrix[0][2], boardMatrix[0][3]].every(x => x === 0)) {
                 return {
