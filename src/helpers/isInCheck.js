@@ -1,140 +1,60 @@
-import createMatrix from './createMatrix'
-import convertAlphToNum from './convertAlphToNum'
-import convertNum from './convertNum'
+import canKingMove from './canKingMove'
+import {
+    checkDiagonal,
+    checkForKnight,
+    checkForPawn,
+    checkPerpendicular
+} from './attacks'
+import blockAttacks from './blockAttacks'
 
 
-function isInCheck(toMove, kingPosition, board, to) {
-    const toX = convertAlphToNum(to[0])
-    const toY = convertNum(to[1])
-    const kingX = convertAlphToNum(kingPosition[0])
-    const kingY = convertNum(kingPosition[1])
-
-    const boardMatrix = createMatrix(board, true)
-
-    const output = { boardMatrix }
-
-    const checkForKnights = () => {
-        const enemy = toMove === 'white' ? 'n' : 'N'
-        const arr = []
-        const possibleSquares = [
-            [kingY - 2, kingX - 1],
-            [kingY - 2, kingX + 1],
-            [kingY - 1, kingX - 2],
-            [kingY - 1, kingX + 2],
-            [kingY + 1, kingX - 2],
-            [kingY + 1, kingX + 2],
-            [kingY + 2, kingX - 1],
-            [kingY + 2, kingX + 1]
-        ]
-        for (let square of possibleSquares) {
-            let y = square[0]
-            let x = square[1]
-            if (x >= 0 && y >= 0 && x <= 7 && y <= 7) {
-                if (boardMatrix[y][x] == enemy) {
-                    arr.push(square)
-                }
+function isInCheck(toMove, boardMatrix, isKing = true) {
+    /**
+     * If king = true then determine if the king is currently in check
+     * else: determine if a certain square can be accessed by an opposing piece
+     */
+    let Y, X, king
+    //IF KING THEN FIND INDEX OF KING
+    if (isKing === true) {
+        king = toMove === 'white' ? 'K' : 'k'
+        for (let i = 0; i <= 7; i++) {
+            if (boardMatrix[i].indexOf(king) !== -1) {
+                Y = i
+                X = boardMatrix[i].indexOf(king)
+                i = 8
             }
         }
-        if (arr.length > 0) { output[enemy] = arr }
+    } else {
+        Y = isKing[0]
+        X = isKing[1]
     }
 
-    const checkForRooks = (queen = false) => {
-        let enemy
-        if (!queen) { enemy = toMove === 'white' ? 'r' : 'R' }
-        else { enemy = toMove === 'white' ? 'q' : 'Q' }
+    const attacks = { diagonal: null, perpendicular: null, knight: null, pawn: null }
 
-        const arr = []
-        let square
+    const diagonal = checkDiagonal(toMove, Y, X, boardMatrix)
+    if (diagonal) { attacks['diagonal'] = diagonal }
 
-        //check left
-        for (let i = kingX - 1; i >= 0; i--) {
-            square = boardMatrix[kingY][i]
-            if (square === enemy) { arr.push([kingY, i]) }
-            else if (square !== 0) { i = -1 }
-        }
-        //check right
-        for (let i = kingX + 1; i <= 7; i++) {
-            square = boardMatrix[kingY][i]
-            if (square === enemy) { arr.push([kingY, i]) }
-            else if (square !== 0) { i = 8 }
-        }
-        //check up
-        for (let i = kingY - 1; i >= 0; i--) {
-            square = boardMatrix[i][kingX]
-            if (square === enemy) { arr.push([i, kingX]) }
-            else if (square !== 0) { i = -1 }
-        }
-        //check down
-        for (let i = kingY + 1; i <= 7; i++) {
-            square = boardMatrix[i][kingX]
-            if (square === enemy) { arr.push([i, kingX]) }
-            else if (square !== 0) { i = 8 }
-        }
-        if (arr.length > 0) { output[enemy] = arr }
+    const perpendicular = checkPerpendicular(toMove, Y, X, boardMatrix)
+    if (perpendicular) { attacks['perpendicular'] = perpendicular }
+
+    const knight = checkForKnight(toMove, Y, X, boardMatrix)
+    if (knight) { attacks['knight'] = knight }
+
+    const pawn = checkForPawn(toMove, Y, X, boardMatrix)
+    if (pawn) { attacks['pawn'] = pawn }
+
+    //CHECK MATE ?
+    if (isKing === true && !Object.values(attacks).every(x => x === null)) {
+        //Can king move?
+        const kingCanMove = canKingMove(toMove, Y, X, boardMatrix)
+        // Can attack be blocked?
+        console.log(blockAttacks(toMove, Y, X, boardMatrix, attacks))
+        console.log('----------------------------------------------')
+
     }
 
-    const checkForBishops = (queen = false) => {
-        let enemy
-        if (!queen) { enemy = toMove === 'white' ? 'b' : 'B' }
-        else { enemy = toMove === 'white' ? 'q' : 'Q' }
+    return Object.values(attacks).every(x => x === null) ? false : true
 
-        const arr = []
-        let square
-
-        //check top left
-        for (let y = kingY - 1, x = kingX - 1; y >= 0; y-- , x--) {
-            square = boardMatrix[y][x]
-            if (square === enemy) { arr.push([y, x]) }
-            else if (square !== 0) { y = -1 }
-        }
-        //check top right
-        for (let y = kingY - 1, x = kingX + 1; y >= 0; y-- , x++) {
-            square = boardMatrix[y][x]
-            if (square === enemy) { arr.push([y, x]) }
-            else if (square !== 0) { y = -1 }
-        }
-        //check bottom left
-        for (let y = kingY + 1, x = kingX - 1; y <= 7; y++ , x--) {
-            square = boardMatrix[y][x]
-            if (square === enemy) { arr.push([y, x]) }
-            else if (square !== 0) { y = 8 }
-        }
-        //check bottom right
-        for (let y = kingY + 1, x = kingX + 1; y <= 7; y++ , x++) {
-            square = boardMatrix[y][x]
-            if (square === enemy) { arr.push([y, x]) }
-            else if (square !== 0) { y = 8 }
-        }
-        if (arr.length > 0) { output[enemy] = arr }
-    }
-
-    const checkForQueen = () => {
-        checkForRooks(true)
-        checkForBishops(true)
-    }
-
-    const checkForPawn = () => {
-        if (toMove === 'white') {
-            if (boardMatrix[kingY - 1][kingX - 1] === 'p') {
-                output['p'] = [kingY - 1, kingX - 1]
-            } else if (boardMatrix[kingY - 1][kingX + 1] === 'p') {
-                output['p'] = [kingY - 1, kingX + 1]
-            }
-        } else {
-            if (boardMatrix[kingY + 1][kingX - 1] === 'P') {
-                outut['P'] = [kingY + 1, kingX - 1]
-            } else if (boardMatrix[kingY + 1][kingX + 1] === 'P') {
-                output['P'] = [kingY + 1, kingX + 1]
-            }
-        }
-    }
-
-    checkForKnights()
-    checkForRooks()
-    checkForBishops()
-    checkForQueen()
-    checkForPawn()
-    return output
 }
 
 export default isInCheck

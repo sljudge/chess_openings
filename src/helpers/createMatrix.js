@@ -1,4 +1,4 @@
-export default function createMatrix(board, typed = false) {
+export default function createMatrix(board) {
     let boardMatrix = [
         [0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0],
@@ -15,8 +15,7 @@ export default function createMatrix(board, typed = false) {
             j++
         }
         const key = keys[i]
-        if (!typed) { boardMatrix[j][i % 8] = board[key] === null ? 0 : 1 }
-        else { boardMatrix[j][i % 8] = board[key] === null ? 0 : board[key] }
+        boardMatrix[j][i % 8] = board[key] === null ? 0 : board[key]
     }
     return boardMatrix
 }

@@ -1,24 +1,23 @@
 import { takeEvery, select, call, put } from 'redux-saga/effects'
-import { SET_CHECK } from '../actions/setCheck'
-import { SELECT_PIECE } from '../actions/movePiece'
+import { MOVE_PIECE } from '../actions/movePiece'
+import store from './store'
+import createMatrix from '../helpers/createMatrix'
+import isInCheck from '../helpers/isInCheck'
 
 
 
-function* selectPieceAsync(action) {
-    console.log('SET CHECK', action)
-    let id = action.id
-    let attack = action.attack
-    let kingPosition = action.kingPosition
-    //If in check by two or more pieces then ensure that king is piece to move
-    if (Object.keys(attack).length > 1 && id === kingPosition) {
-        yield put({ type: SELECT_PIECE, id })
-    }
-    yield put({ type: SELECT_PIECE, id })
+function* movePieceAsync(action) {
+    // console.log('MOVE PIECE', action)
+    const state = store.getState()
+    const boardMatrix = createMatrix(state.board)
+
+    isInCheck(state.board.toMove, boardMatrix)
+
 }
 
-export function* watchSetCheck() {
-    console.log('watching')
-    yield takeEvery(SET_CHECK, selectPieceAsync)
+export function* watchMovePiece() {
+    // console.log('watching')
+    yield takeEvery(MOVE_PIECE, movePieceAsync)
 }
 
 

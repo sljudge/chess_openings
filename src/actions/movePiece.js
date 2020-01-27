@@ -52,7 +52,6 @@ export const movePiece = (toMove, piece, from, to) => {
 
 
 export const selectPiece = (piece) => {
-    console.log('being watched', piece)
     return ({
         type: SELECT_PIECE,
         id: piece,

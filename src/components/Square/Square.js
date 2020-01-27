@@ -5,32 +5,23 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { movePiece, selectPiece, castleKingSide, castleQueenSide, enPassant } from '../../actions/movePiece'
-import { setCheck } from '../../actions/setCheck'
 import validateMove from '../../helpers/validateMove'
-import isInCheck from '../../helpers/isInCheck'
+
 
 const Square = props => {
     /////////////// PROPS   ////////////////////////////
-    const { id, squareColorStr, pieceStr, selectPiece, movePiece, castleKingSide, castleQueenSide, enPassant, board, castle, check, setCheck } = { ...props }
+    const { id, squareColorStr, pieceStr, selectPiece, movePiece, castleKingSide, castleQueenSide, enPassant, board, castling } = { ...props }
     /////////////// BOARD   ////////////////////////////
     const squareColor = squareColorStr === 'white' ? '#e4e8d2' : '#c4cf92'
-    const from = board.selected //Moving from (...) to (...)
-    const to = id
+    const from = board.selected //Moving from (...) 
+    const to = id //Moving to (...)
     const toMove = board.toMove //White or black to move
     /////////////// PIECES   ////////////////////////////
     const piece = board[from] //Current piece selected
     const targetPiece = board[id]// Piece being targeted on move
-    const kingPosition = check[toMove].kingPosition
 
     const onSelect = () => {
-
-        const inCheck = isInCheck(toMove, kingPosition, board, to)
-        if (Object.keys(inCheck).length > 0) {
-            console.log('PLAYER IS IN CHECK: ', inCheck)
-            setCheck(toMove, inCheck, kingPosition, id)
-        } else {
-            selectPiece(id)
-        }
+        selectPiece(id)
     }
 
     const tryMovePiece = () => {
@@ -41,8 +32,8 @@ const Square = props => {
             if (toMove === pieceColor) {
                 //you can't take your own color
                 if (targetPiece === null || pieceColor === 'white' && targetPiece.toLowerCase() === targetPiece || pieceColor === 'black' && targetPiece.toUpperCase() === targetPiece) {
-                    // ensure pieces move as they should and get response -> true/false/object with special cases
-                    let response = validateMove(board, castle, piece, from, to)
+                    // ensure pieces move as they should and get response -> true/false/kingSide/queenSide/enPassant
+                    let response = validateMove(board, castling, piece, from, to)
                     console.log('RESPONSE: ', response)
                     console.log('--------------------------------------------------')
                     //SUCCESS
@@ -58,6 +49,7 @@ const Square = props => {
                 }
             }
         }
+
     }
 
     let type, typeColor
@@ -108,7 +100,7 @@ const Square = props => {
 const mapStateToProps = (state) => {
     return {
         board: state.board,
-        castle: state.castle,
+        castling: state.castling,
         check: state.check
     }
 }
@@ -119,7 +111,6 @@ const mapActionsToProps = (dispatch, props) => {
         castleKingSide,
         castleQueenSide,
         enPassant,
-        setCheck
     }, dispatch)
 }
 const mergeProps = (propsFromState, propsFromDispatch, ownProps) => {

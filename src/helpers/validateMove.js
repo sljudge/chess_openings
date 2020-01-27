@@ -1,8 +1,9 @@
 import convertAlphToNum from './convertAlphToNum'
 import convertNum from './convertNum'
+import isInCheck from './isInCheck'
 import createMatrix from './createMatrix'
 
-function validateMove(board, castle, piece, from, to) {
+function validateMove(board, castling, piece, from, to) {
     const color = piece === piece.toUpperCase() ? 'white' : 'black'
     //Co-ordinates
     const fromX = convertAlphToNum(from[0])
@@ -24,17 +25,13 @@ function validateMove(board, castle, piece, from, to) {
             //up
             if (fromY > toY) {
                 for (let i = fromY - 1; i > toY; i--) {
-                    if (boardMatrix[i][fromX] === 1) {
-                        return false
-                    }
+                    if (boardMatrix[i][fromX] !== 0) { return false }
                 } return true
             }
             //down
             else if (fromY < toY) {
                 for (let i = fromY + 1; i < toY; i++) {
-                    if (boardMatrix[i][fromX] === 1) {
-                        return false
-                    }
+                    if (boardMatrix[i][fromX] !== 0) { return false }
                 } return true
             }
         }
@@ -43,17 +40,13 @@ function validateMove(board, castle, piece, from, to) {
             //right
             if (fromX < toX) {
                 for (let i = fromX + 1; i < toX; i++) {
-                    if (boardMatrix[fromY][i] === 1) {
-                        return false
-                    }
+                    if (boardMatrix[fromY][i] !== 0) { return false }
                 } return true
             }
             //left
             else if (fromX > toX) {
                 for (let i = fromX - 1; i > toX; --i) {
-                    if (boardMatrix[fromY][i] === 1) {
-                        return false
-                    }
+                    if (boardMatrix[fromY][i] !== 0) { return false }
                 } return true
             }
         } else {
@@ -95,36 +88,26 @@ function validateMove(board, castle, piece, from, to) {
             //right & down
             if (toX > fromX && toY > fromY) {
                 for (let x = fromX + 1, y = fromY + 1; x < toX; x++ , y++) {
-                    if (boardMatrix[y][x] === 1) {
-                        return false
-                    }
+                    if (boardMatrix[y][x] !== 0) { return false }
                 } return true
             }
             //left & down
             else if (toX < fromX && toY > fromY) {
                 for (let x = fromX - 1, y = fromY + 1; x > toX; x-- , y++) {
-                    if (boardMatrix[y][x] === 1) {
-                        return false
-                    }
+                    if (boardMatrix[y][x] !== 0) { return false }
                 } return true
             }
             //right & up
             else if (toX > fromX && toY < fromY) {
                 for (let x = fromX + 1, y = fromY - 1; x < toX; x++ , y--) {
-                    if (boardMatrix[y][x] === 1) {
-                        return false
-                    }
+                    if (boardMatrix[y][x] !== 0) { return false }
                 } return true
             }
             //left and up
             else if (toX < fromX && toY < fromY) {
                 for (let x = fromX - 1, y = fromY - 1; x > toX; x-- , y--) {
-                    if (boardMatrix[y][x] === 1) {
-                        return false
-                    }
+                    if (boardMatrix[y][x] !== 0) { return false }
                 } return true
-            } else {
-                return false
             }
         } else {
             return false
@@ -148,26 +131,33 @@ function validateMove(board, castle, piece, from, to) {
     ///////////////////////////////////////    
 
     const kingMoves = () => {
+        //NORMAL MOVE
         if (Math.abs(toX - fromX) <= 1 && Math.abs(toY - fromY) <= 1) {
             return true
         }
         //KING SIDE CASTLE
-        if (!castle.inCheck && castle[color].kingSide === null && to === 'g1' || to === 'g8') {
-            //check to see if way is clear *****NEED TO ADD LINE OF CHECK
-            if (color === 'white' && [boardMatrix[7][5], boardMatrix[7][6]].every(x => x === 0) || color === 'black' && [boardMatrix[0][5], boardMatrix[0][6]].every(x => x === 0)) {
-                return {
-                    castledKingSide: true
+        if (castling[color].kingSide === null) {
+            if (to === 'g1' || to === 'g8') {
+                //check to see if way is clear 
+                if (color === 'white' && [boardMatrix[7][5], boardMatrix[7][6]].every(x => x === 0) || color === 'black' && [boardMatrix[0][5], boardMatrix[0][6]].every(x => x === 0)) {
+                    return {
+                        castledKingSide: true
+                    }
                 }
             }
+            return false
         }
         // QUEEN SIDE CASTLE
-        if (!castle.inCheck && castle[color].queenSide === null && to === 'c1' || to === 'c8') {
-            //check to see if way is clear *****NEED TO ADD LINE OF CHECK
-            if (color === 'white' && [boardMatrix[7][1], boardMatrix[7][2], boardMatrix[7][3]].every(x => x === 0) || color === 'black' && [boardMatrix[0][1], boardMatrix[0][2], boardMatrix[0][3]].every(x => x === 0)) {
-                return {
-                    castledQueenSide: true
+        else if (castling[color].queenSide === null) {
+            if (to === 'c1' || to === 'c8') {
+                //check to see if way is clear 
+                if (color === 'white' && [boardMatrix[7][1], boardMatrix[7][2], boardMatrix[7][3]].every(x => x === 0) || color === 'black' && [boardMatrix[0][1], boardMatrix[0][2], boardMatrix[0][3]].every(x => x === 0)) {
+                    return {
+                        castledQueenSide: true
+                    }
                 }
             }
+            return false
         }
         else {
             return false
@@ -185,22 +175,17 @@ function validateMove(board, castle, piece, from, to) {
             return Math.abs(fromX - toX) === 1 && Math.abs(fromY - toY) === 1 ? { enPassant: true } : false
         }
         //NON-TAKING MOVE
-        else if (fromX === toX) {
-            //check if to square is occupied
-            if (boardMatrix[toY][toX] !== 1) {
-                //double or single move
-                if (color === 'white') {
-                    return fromY === 6 && toY === 4 || fromY - toY === 1 ? true : false
-                } else {
-                    return fromY === 1 && toY === 3 || toY - fromY === 1 ? true : false
-                }
+        else if (fromX === toX && boardMatrix[toY][toX] === 0) {
+            //double or single move
+            if (color === 'white') {
+                return fromY === 6 && toY === 4 || fromY - toY === 1 ? true : false
             } else {
-                return false
+                return fromY === 1 && toY === 3 || toY - fromY === 1 ? true : false
             }
         }
         //TAKING MOVE LEFT || RIGHT
         //check if there is a piece to take and adjacent
-        else if (Math.abs(toX - fromX) === 1 && boardMatrix[toY][toX] === 1) {
+        else if (Math.abs(toX - fromX) === 1 && boardMatrix[toY][toX] !== 0) {
             //check only one ahead
             if (color === 'white') {
                 return fromY - toY === 1 ? true : false
@@ -217,21 +202,76 @@ function validateMove(board, castle, piece, from, to) {
     ////////////////////     RETURN     ////////////////////////
     //////////////////////////////////////////////////////////// 
 
+    const assignValuesToMatrix = () => {
+        boardMatrix[toY][toX] = piece
+        boardMatrix[fromY][fromX] = 0
+    }
+    console.log(piece)
+    //Move piece and verify if in check then return result
     switch (piece.toLowerCase()) {
         case 'r':
-            return rookMoves(boardMatrix, piece, from, to);
+            if (rookMoves()) {
+                assignValuesToMatrix()
+                return isInCheck(color, boardMatrix) ? false : true
+            } return false
         case 'n':
-            return knightMoves(boardMatrix, piece, from, to);
+            if (knightMoves()) {
+                assignValuesToMatrix()
+                return isInCheck(color, boardMatrix) ? false : true
+            } return false
         case 'b':
-            return bishopMoves(boardMatrix, piece, from, to);
+            if (bishopMoves()) {
+                assignValuesToMatrix()
+                return isInCheck(color, boardMatrix) ? false : true
+            } return false;
         case 'q':
-            return queenMoves(boardMatrix, piece, from, to);
+            if (queenMoves()) {
+                assignValuesToMatrix()
+                return isInCheck(color, boardMatrix) ? false : true
+            } return false
         case 'k':
-            return kingMoves(boardMatrix, piece, from, to);
+            let kingMove = kingMoves()
+            //Normal move success
+            if (kingMove === true) {
+                assignValuesToMatrix()
+                return isInCheck(color, boardMatrix) ? false : true
+            }
+            //Normal move fail
+            else if (kingMove === false) {
+                return false
+            }
+            //Castle King side (verifying if king crosses line of check)
+            else if (kingMove.castledKingSide) {
+                for (let x = 4; x < 7; x++) {
+                    if (isInCheck(color, boardMatrix, [fromY, x])) { return false }
+                }
+                return { castledKingSide: true }
+            }
+            //Castle Queen side (verifying if king crosses line of check)
+            else if (kingMove.castledQueenSide) {
+                for (let x = 4; x > 0; x--) {
+                    if (isInCheck(color, boardMatrix, [fromY, x])) { return false }
+                }
+                return { castledQueenSide: true }
+            } return false
         case 'p':
-            return pawnMoves(boardMatrix, piece, from, to);
+            let pawnMove = pawnMoves()
+            //Normal move success
+            if (pawnMove === true) {
+                assignValuesToMatrix()
+                return isInCheck(color, boardMatrix) ? false : true
+            }
+            //Normal move fail
+            else if (pawnMove === false) {
+                return false
+            }
+            //En passant
+            else if (pawnMove.enPassant) {
+                assignValuesToMatrix()
+                return isInCheck(color, boardMatrix) ? false : { enPassant: true }
+            } return false
+
         default: return null
     }
-
 }
 export default validateMove

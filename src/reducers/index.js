@@ -1,11 +1,9 @@
 import { combineReducers } from 'redux'
 import board from './board'
-import check from './check'
-import castle from './castle'
+import castling from './castling'
 
 
 export default combineReducers({
     board,
-    check,
-    castle
+    castling
 })

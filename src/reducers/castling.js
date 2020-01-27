@@ -3,7 +3,6 @@ import {
     CASTLE_KING_SIDE,
     CASTLE_QUEEN_SIDE,
 } from '../actions/movePiece'
-import { SET_CHECK } from '../actions/setCheck'
 
 const initialState = {
     //null / true / false
@@ -14,8 +13,7 @@ const initialState = {
     black: {
         kingSide: null,
         queenSide: null
-    },
-    inCheck: false
+    }
 }
 
 const reducer = (state = initialState, action) => {
@@ -71,12 +69,6 @@ const reducer = (state = initialState, action) => {
                     kingSide: false,
                     queenSide: true
                 })
-            }
-        // -------------------------------------------------------------------------------
-        case SET_CHECK:
-            return {
-                ...state,
-                inCheck: state.inCheck === false ? true : false
             }
         // -------------------------------------------------------------------------------
         default:
