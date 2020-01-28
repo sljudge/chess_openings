@@ -3,24 +3,26 @@ import {
     checkDiagonal,
     checkForKnight,
     checkForPawn,
-    checkPerpendicular
+    checkPerpendicular,
+    checkForKing
 } from './attacks'
-import blockAttacks from './blockAttacks'
+import attackCanBeBlockedOrTaken from './attackCanBeBlockedOrTaken'
 
 
-function isInCheck(toMove, boardMatrix, isKing = true) {
+function isInCheck(toMove, boardMatrix, isKing = true, checkForCheckmate = false) {
     /**
      * If king = true then determine if the king is currently in check
      * else: determine if a certain square can be accessed by an opposing piece
      */
-    let Y, X, king
+
+    let Y, X, kingPiece
     //IF KING THEN FIND INDEX OF KING
     if (isKing === true) {
-        king = toMove === 'white' ? 'K' : 'k'
+        kingPiece = toMove === 'white' ? 'K' : 'k'
         for (let i = 0; i <= 7; i++) {
-            if (boardMatrix[i].indexOf(king) !== -1) {
+            if (boardMatrix[i].indexOf(kingPiece) !== -1) {
                 Y = i
-                X = boardMatrix[i].indexOf(king)
+                X = boardMatrix[i].indexOf(kingPiece)
                 i = 8
             }
         }
@@ -29,7 +31,7 @@ function isInCheck(toMove, boardMatrix, isKing = true) {
         X = isKing[1]
     }
 
-    const attacks = { diagonal: null, perpendicular: null, knight: null, pawn: null }
+    const attacks = { diagonal: null, perpendicular: null, knight: null, pawn: null, king: null }
 
     const diagonal = checkDiagonal(toMove, Y, X, boardMatrix)
     if (diagonal) { attacks['diagonal'] = diagonal }
@@ -43,13 +45,25 @@ function isInCheck(toMove, boardMatrix, isKing = true) {
     const pawn = checkForPawn(toMove, Y, X, boardMatrix)
     if (pawn) { attacks['pawn'] = pawn }
 
+    //(KING CAN'T BLOCK FOR HIMSELF)
+    if (isKing === true || checkForCheckmate === true) {
+        const king = checkForKing(toMove, Y, X, boardMatrix, kingPiece)
+        if (king) { attacks['king'] = king }
+    }
+
     //CHECK MATE ?
     if (isKing === true && !Object.values(attacks).every(x => x === null)) {
-        //Can king move?
-        const kingCanMove = canKingMove(toMove, Y, X, boardMatrix)
-        // Can attack be blocked?
-        console.log(blockAttacks(toMove, Y, X, boardMatrix, attacks))
-        console.log('----------------------------------------------')
+        console.log('checking for mate')
+        // console.log(attackCanBeBlockedOrTaken(toMove, Y, X, boardMatrix, attacks))
+        // console.log('----------------------------------------------')
+        console.log('ATTACKS', attacks)
+        console.log('CAN KING MOVE', canKingMove(toMove, Y, X, boardMatrix))
+        console.log('BLOCK ATTACK', attackCanBeBlockedOrTaken(toMove, Y, X, boardMatrix, attacks))
+        if (!canKingMove(toMove, Y, X, boardMatrix) && !attackCanBeBlockedOrTaken(toMove, Y, X, boardMatrix, attacks)) {
+            console.log('CHECK MATE !!!')
+            alert(`CHECK MATE !!! ${toMove === 'white' ? 'black' : 'white'} wins!!!`)
+
+        }
 
     }
 
