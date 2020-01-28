@@ -3,6 +3,7 @@ import isInCheck from './isInCheck'
 export default function attackCanBeBlockedOrTaken(toMove, Y, X, boardMatrix, attacks) {
     /**
      * Determine if any attacks can be blocked or taken. If attacks can be stopped eliminate corresponding category from output.
+     * Go through each square and apply isInCheck to determine if square can be reached by opposing piece
      */
     const blockerColor = toMove === 'white' ? 'black' : 'white'
     const perpendicular = attacks.perpendicular
@@ -12,8 +13,19 @@ export default function attackCanBeBlockedOrTaken(toMove, Y, X, boardMatrix, att
 
     const output = { perpendicular, diagonal, knight, pawn }
 
-    console.log('input', output)
-    // console.log('blocker color', blockerColor)
+    const canPawnBlock = (y, x) => {
+        //check square is empty
+        if (boardMatrix[y][x] !== 0) { return false }
+        //see if pawn can block attack
+        if (toMove === 'white') {
+            if (y === 4 && boardMatrix[6][x] === 'P') { return true }
+            else if (boardMatrix[y + 1][x] === 'P') { return true }
+        } else {
+            if (y === 3 && boardMatrix[1][x] === 'p') { return true }
+            else if (boardMatrix[y - 1][x] === 'p') { return true }
+        }
+        return false
+    }
 
     let x, y
     if (perpendicular) {
@@ -22,28 +34,28 @@ export default function attackCanBeBlockedOrTaken(toMove, Y, X, boardMatrix, att
         //UP
         if (Y < y) {
             for (let i = y; i > Y; i--) {
-                // console.log([i, x])
+                if (canPawnBlock(i, x)) { return true }
                 if (isInCheck(blockerColor, boardMatrix, [i, x])) { delete output.perpendicular; break }
             }
         }
         //DOWN
         else if (Y > y) {
             for (let i = y; i < Y; i++) {
-                // console.log([i, x])
+                if (canPawnBlock(i, x)) { return true }
                 if (isInCheck(blockerColor, boardMatrix, [i, x])) { delete output.perpendicular; break }
             }
         }
         //RIGHT
         else if (X > x) {
             for (let i = x; i < X; i++) {
-                // console.log([y, i])
+                if (canPawnBlock(i, x)) { return true }
                 if (isInCheck(blockerColor, boardMatrix, [y, i])) { delete output.perpendicular; break }
             }
         }
         //LEFT
         else if (X < x) {
             for (let i = x; i > X; i--) {
-                // console.log([y, i])
+                if (canPawnBlock(i, x)) { return true }
                 if (isInCheck(blockerColor, boardMatrix, [y, i])) { delete output.perpendicular; break }
             }
         }
@@ -51,32 +63,31 @@ export default function attackCanBeBlockedOrTaken(toMove, Y, X, boardMatrix, att
     if (diagonal) {
         y = diagonal[0]
         x = diagonal[1]
-        // console.log('diagonal', [y, x])
         //UP & LEFT
         if (Y < y && X < x) {
             for (let i = y, j = x; i > Y; i-- , j--) {
-                // console.log([i, j])
+                if (canPawnBlock(i, j)) { return true }
                 if (isInCheck(blockerColor, boardMatrix, [i, j])) { delete output.diagonal; break }
             }
         }
         //UP & RIGHT
         else if (Y < y && X > x) {
             for (let i = y, j = x; i > Y; i-- , j++) {
-                // console.log([i, j])
+                if (canPawnBlock(i, j)) { return true }
                 if (isInCheck(blockerColor, boardMatrix, [i, j])) { delete output.diagonal; break }
             }
         }
         //DOWN & LEFT
         else if (Y > y && X < x) {
             for (let i = y, j = x; i < Y; i++ , j--) {
-                // console.log([i, j])
+                if (canPawnBlock(i, j)) { return true }
                 if (isInCheck(blockerColor, boardMatrix, [i, j])) { delete output.diagonal; break }
             }
         }
         //DOWN & RIGHT
         else if (Y > y && X > x) {
             for (let i = y, j = x; i < Y; i++ , j++) {
-                // console.log([i, j])
+                if (canPawnBlock(i, j)) { return true }
                 if (isInCheck(blockerColor, boardMatrix, [i, j])) { delete output.diagonal; break }
             }
         }
@@ -84,17 +95,14 @@ export default function attackCanBeBlockedOrTaken(toMove, Y, X, boardMatrix, att
     if (knight) {
         x = knight[1]
         y = knight[0]
-        // console.log('knight', [y, x])
         if (isInCheck(blockerColor, boardMatrix, [y, x])) { delete output.knight }
     }
     if (pawn) {
         x = pawn[1]
         y = pawn[0]
-        // console.log('pawn', [y, x])
         if (isInCheck(blockerColor, boardMatrix, [y, x])) { delete output.pawn }
     }
 
-    // console.log(output)
 
     return Object.values(output).every(x => x === null)
 }

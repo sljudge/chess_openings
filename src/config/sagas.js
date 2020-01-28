@@ -10,7 +10,7 @@ function* movePieceAsync(action) {
     // console.log('MOVE PIECE', action)
     const state = store.getState()
     const boardMatrix = createMatrix(state.board)
-
+    //check for check mate
     isInCheck(state.board.toMove, boardMatrix)
 
 }

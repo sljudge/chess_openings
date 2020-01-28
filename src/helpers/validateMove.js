@@ -1,9 +1,14 @@
-import convertAlphToNum from './convertAlphToNum'
-import convertNum from './convertNum'
+import convertAlphToNum from './converters/convertAlphToNum'
+import convertNum from './converters/convertNum'
 import isInCheck from './isInCheck'
 import createMatrix from './createMatrix'
 
 function validateMove(board, castling, piece, from, to) {
+    /**
+     * Ensures pieces move correctly and then calls isInCheck to verify that the move does not put the player in check
+     */
+
+
     const color = piece === piece.toUpperCase() ? 'white' : 'black'
     //Co-ordinates
     const fromX = convertAlphToNum(from[0])

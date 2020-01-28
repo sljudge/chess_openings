@@ -25,7 +25,6 @@ const Square = props => {
     }
 
     const tryMovePiece = () => {
-
         if (piece !== null && piece !== undefined) {
             const pieceColor = piece.toUpperCase() === piece ? 'white' : 'black'
             //check if it's the correct player to go
