@@ -26,7 +26,6 @@ const Board = props => {
             ))}
 
         </div>
-        // <Square id={'1a'} color={'black'} />
     )
 
 }

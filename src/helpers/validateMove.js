@@ -8,7 +8,7 @@ function validateMove(board, castling, piece, from, to) {
      * Ensures pieces move correctly and then calls isInCheck to verify that the move does not put the player in check
      */
 
-
+    // const piece = board[from]
     const color = piece === piece.toUpperCase() ? 'white' : 'black'
     //Co-ordinates
     const fromX = convertAlphToNum(from[0])
@@ -17,8 +17,6 @@ function validateMove(board, castling, piece, from, to) {
     const toY = convertNum(to[1])
     //Matrix
     const boardMatrix = createMatrix(board)
-
-    console.log('____________________________________')
 
     ///////////////////////////////////////    
     //////////     ROOK     /////////////
@@ -211,7 +209,6 @@ function validateMove(board, castling, piece, from, to) {
         boardMatrix[toY][toX] = piece
         boardMatrix[fromY][fromX] = 0
     }
-    console.log(piece)
     //Move piece and verify if in check then return result
     switch (piece.toLowerCase()) {
         case 'r':

@@ -33,8 +33,6 @@ const Square = props => {
                 if (targetPiece === null || pieceColor === 'white' && targetPiece.toLowerCase() === targetPiece || pieceColor === 'black' && targetPiece.toUpperCase() === targetPiece) {
                     // ensure pieces move as they should and get response -> true/false/kingSide/queenSide/enPassant
                     let response = validateMove(board, castling, piece, from, to)
-                    console.log('RESPONSE: ', response)
-                    console.log('--------------------------------------------------')
                     //SUCCESS
                     if (response === true) { movePiece(toMove, piece, from, to) }
                     // FAILED
