@@ -3,6 +3,8 @@ import {
     CASTLE_KING_SIDE,
     CASTLE_QUEEN_SIDE,
 } from '../actions/movePiece'
+import { RESET } from '../actions/updateData'
+
 
 const initialState = {
     //null / true / false
@@ -71,10 +73,16 @@ const reducer = (state = initialState, action) => {
                 })
             }
         // -------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------
+        case RESET:
+            return {
+                ...state,
+                ...initialState
+            }
+        // -------------------------------------------------------------------------------
         default:
             return state
     }
-
 }
 
 export default reducer

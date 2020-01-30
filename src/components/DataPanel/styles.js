@@ -4,10 +4,10 @@ export default StyleSheet.create({
     panelWrapper: {
         position: "absolute",
         // top: '5%',
-        right: '-40rem',
+        right: 'calc(4.5rem - 50%)',
         display: "flex",
         height: '100%',
-        width: '40rem',
+        width: 'calc(50% - 4.5rem)',
         transition: 'right 1s',
         margin: '0 0 0 0',
     },
@@ -22,7 +22,7 @@ export default StyleSheet.create({
         justifyContent: 'center',
         minHeight: '100%',
         maxHeight: '100%',
-        width: '40rem',
+        width: '100%',
         padding: '2rem',
         backgroundColor: 'rgba(0,0,0, 0.8)',
         color: 'whitesmoke',
@@ -83,13 +83,13 @@ export default StyleSheet.create({
     switchAutoOn: {
         backgroundColor: 'rgba(0, 166, 83, 0.5)',
         ':hover': {
-            backgroundColor: 'rgba(250,22,6, 0.5)',
+            backgroundColor: 'rgba(250,22,6, 0.1)',
         }
     },
     switchAutoOff: {
         backgroundColor: 'rgba(250,22,6, 0.5)',
         ':hover': {
-            backgroundColor: 'rgba(0, 166, 83, 0.5)',
+            backgroundColor: 'rgba(0, 166, 83, 0.1)',
         }
     },
     switchTeacherOn: {

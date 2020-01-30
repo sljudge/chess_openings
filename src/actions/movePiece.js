@@ -77,3 +77,4 @@ export const enPassant = (from, to, toMove) => ({
     to,
     toMove
 })
+

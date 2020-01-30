@@ -4,8 +4,9 @@ import {
     CASTLE_KING_SIDE,
     CASTLE_QUEEN_SIDE,
     EN_PASSANT,
-    SET_DISABLED
+    SET_DISABLED,
 } from '../actions/movePiece'
+import { RESET } from '../actions/updateData'
 
 const initialState = {
     a8: 'r', b8: 'n', c8: 'b', d8: 'q', e8: 'k', f8: 'b', g8: 'n', h8: 'r',
@@ -19,7 +20,7 @@ const initialState = {
     selected: null,
     toMove: 'white',
     enPassant: null,
-    disabled: false
+    disabled: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -124,6 +125,13 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 disabled: action.disabled
+            }
+        // -------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------
+        case RESET:
+            return {
+                ...state,
+                ...initialState
             }
         // -------------------------------------------------------------------------------
         default:

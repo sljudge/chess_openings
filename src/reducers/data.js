@@ -1,16 +1,19 @@
 import {
     UPDATE_DATA,
     TOGGLE_PANEL,
+    TOGGLE_AUTO,
     TOGGLE_AUTO_HOVER,
-    TOGGLE_PLAYER
+    TOGGLE_PLAYER,
+    RESET,
+    SET_ALERT
 } from '../actions/updateData'
 import { initialMoves } from '../data/initialMoves'
 
 const initialState = {
     player: 'white',
     stats: {
-        totalGames: '- - -',
-        averageRating: '- - -',
+        totalGames: 2121662,
+        averageRating: 2408,
         whiteWinPercentage: 34,
         blackWinPercentage: 24,
         drawPercentage: 42,
@@ -19,10 +22,11 @@ const initialState = {
     black: [],
     panel: {
         open: true,
-        auto: true,
+        auto: false,
         autoHover: false,
         teacher: false
-    }
+    },
+    alert: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -53,6 +57,13 @@ const reducer = (state = initialState, action) => {
             } else {
                 return {
                     ...state,
+                    stats: {
+                        totalGames,
+                        averageRating,
+                        whiteWinPercentage,
+                        blackWinPercentage,
+                        drawPercentage
+                    },
                     noGames: true
                 }
             }
@@ -63,12 +74,19 @@ const reducer = (state = initialState, action) => {
                 player: state.player === 'white' ? 'black' : 'white'
             }
         // -------------------------------------------------------------------------------
-        // -------------------------------------------------------------------------------
         case TOGGLE_PANEL:
             return {
                 ...state,
                 panel: Object.assign({}, state.panel, {
                     open: state.panel.open ? false : true
+                })
+            }
+        // -------------------------------------------------------------------------------
+        case TOGGLE_AUTO:
+            return {
+                ...state,
+                panel: Object.assign({}, state.panel, {
+                    auto: state.panel.auto ? false : true
                 })
             }
         // -------------------------------------------------------------------------------
@@ -78,6 +96,22 @@ const reducer = (state = initialState, action) => {
                 panel: Object.assign({}, state.panel, {
                     autoHover: state.panel.autoHover ? false : true
                 })
+            }
+        // -------------------------------------------------------------------------------
+        case RESET:
+            const newState = Object.assign({}, initialState, {
+                player: state.player
+            })
+            return {
+                ...state,
+                ...newState
+
+            }
+        // -------------------------------------------------------------------------------
+        case SET_ALERT:
+            return {
+                ...state,
+                alert: true
             }
         // -------------------------------------------------------------------------------
         default:

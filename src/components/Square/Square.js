@@ -96,9 +96,9 @@ const Square = props => {
 
 const mapStateToProps = (state) => {
     return {
-        board: state.board,
-        castling: state.castling,
-        data: state.data
+        board: state.board.present,
+        castling: state.castling.present,
+        data: state.data.present
     }
 }
 const mapActionsToProps = (dispatch, props) => {

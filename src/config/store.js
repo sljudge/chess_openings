@@ -5,7 +5,7 @@ import "regenerator-runtime/runtime";
 
 
 import reducers from '../reducers'
-import { watchMovePiece } from './sagas'
+import { watcher } from './sagas'
 
 const sagaMiddleware = createSagaMiddleware()
 const middleware = [sagaMiddleware]
@@ -22,6 +22,6 @@ const store = createStore(
         window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
     ),
 )
-sagaMiddleware.run(watchMovePiece)
+sagaMiddleware.run(watcher)
 
 export default store
