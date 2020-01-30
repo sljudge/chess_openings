@@ -12,6 +12,8 @@ const getMoves = (fen) => (fetch(`https://explorer.lichess.ovh/master?fen=${fen}
 // fen=rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq
 
 function* movePieceAsync(action) {
+    //Disable board until actions are completed
+    yield put({ type: SET_DISABLED, disabled: true })
     //Get data from state
     const data = yield select(state => state.data)
     const player = data.player
@@ -38,11 +40,12 @@ function* movePieceAsync(action) {
                 const from = move.uci.slice(0, 2)
                 const to = move.uci.slice(2)
                 yield put(movePiece(board.toMove, board[from], from, to))
+                yield put({ type: SET_DISABLED, disabled: false })
             }
             //If the fen is not valid then ... tbd
             else {
                 alert('Not a good move!')
-                yield put({ type: SET_DISABLED, disabled: true })
+                yield put({ type: SET_DISABLED, disabled: false })
             }
         }
 

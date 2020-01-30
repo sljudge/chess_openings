@@ -10,7 +10,7 @@ import validateMove from '../../helpers/validateMove'
 
 const Square = props => {
     /////////////// PROPS   ////////////////////////////
-    const { id, squareColorStr, pieceStr, selectPiece, movePiece, castleKingSide, castleQueenSide, enPassant, board, castling } = { ...props }
+    const { id, squareColorStr, pieceStr, selectPiece, movePiece, castleKingSide, castleQueenSide, enPassant, board, castling, data } = { ...props }
     /////////////// BOARD   ////////////////////////////
     const squareColor = squareColorStr === 'white' ? '#e4e8d2' : '#c4cf92'
     const from = board.selected //Moving from (...) 
@@ -54,32 +54,32 @@ const Square = props => {
         typeColor = pieceStr === pieceStr.toUpperCase() ? '#808080' : '#1e1e1e'
         switch (pieceStr.toLowerCase()) {
             case 'r': type = (
-                <div className={css(styles.piece)}>
+                <div className={css(styles.piece)} style={data.player === 'black' ? { transform: 'rotate(180deg)' } : {}}>
                     <i className="fas fa-chess-rook" style={{ color: typeColor }} onClick={() => onSelect()} />
                 </div>
             ); break;
             case 'n': type = (
-                <div className={css(styles.piece)}>
+                <div className={css(styles.piece)} style={data.player === 'black' ? { transform: 'rotate(180deg)' } : {}}>
                     <i className="fas fa-chess-knight" style={{ color: typeColor }} onClick={() => onSelect()} />
                 </div>
             ); break;
             case 'b': type = (
-                <div className={css(styles.piece)}>
+                <div className={css(styles.piece)} style={data.player === 'black' ? { transform: 'rotate(180deg)' } : {}}>
                     <i className="fas fa-chess-bishop" style={{ color: typeColor }} onClick={() => onSelect()} />
                 </div>
             ); break;
             case 'q': type = (
-                <div className={css(styles.piece)}>
+                <div className={css(styles.piece)} style={data.player === 'black' ? { transform: 'rotate(180deg)' } : {}}>
                     <i className="fas fa-chess-queen" style={{ color: typeColor }} onClick={() => onSelect()} />
                 </div>
             ); break;
             case 'k': type = (
-                <div className={css(styles.piece)}>
+                <div className={css(styles.piece)} style={data.player === 'black' ? { transform: 'rotate(180deg)' } : {}}>
                     <i className="fas fa-chess-king" style={{ color: typeColor }} onClick={() => onSelect()} />
                 </div>
             ); break;
             case 'p': type = (
-                <div className={css(styles.piece)}>
+                <div className={css(styles.piece)} style={data.player === 'black' ? { transform: 'rotate(180deg)' } : {}}>
                     <i className="fas fa-chess-pawn" style={{ color: typeColor }} onClick={() => onSelect()} />
                 </div>
             ); break;
@@ -98,7 +98,7 @@ const mapStateToProps = (state) => {
     return {
         board: state.board,
         castling: state.castling,
-        check: state.check
+        data: state.data
     }
 }
 const mapActionsToProps = (dispatch, props) => {
