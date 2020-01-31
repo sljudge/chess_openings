@@ -1,6 +1,6 @@
 import { takeEvery, select, call, put } from 'redux-saga/effects'
 import { MOVE_PIECE, movePiece, castleKingSide, castleQueenSide } from '../actions/movePiece'
-import { UPDATE_DATA, TOGGLE_PLAYER, RESET, SET_ALERT, TOGGLE_AUTO } from '../actions/updateData'
+import { UPDATE_DATA, TOGGLE_PLAYER, RESET, SET_ALERT, TOGGLE_AUTO, CLEAR_GAMES } from '../actions/updateData'
 import createMatrix from '../helpers/createMatrix'
 import isInCheck from '../helpers/isInCheck'
 import constructFen from '../helpers/api/constructFen'
@@ -15,6 +15,9 @@ function* movePieceAsync(action) {
     //Get data from state
     const data = yield select(state => state.data.present)
     const player = yield data.player
+    if (data.stats.totalGames === 0) {
+        yield put({ type: CLEAR_GAMES })
+    }
 
     //construct boardMatrix for reference
     const board = yield select(state => state.board.present)
@@ -36,8 +39,8 @@ function* movePieceAsync(action) {
         if (data.panel.auto && board.toMove !== player) {
             //If the fen is valid then move the piece
             if (result.moves.length > 0) {
-                // const move = result.moves[getRandInt(result.moves.length)]
-                const move = result.moves[0]
+                const move = result.moves[getRandInt(result.moves.length)]
+                // const move = result.moves[0]
                 let from = move.uci.slice(0, 2)
                 let to = move.uci.slice(2)
                 //Account for castling discrepancies with api
@@ -51,6 +54,7 @@ function* movePieceAsync(action) {
             else {
                 !data.alert && alert('No games in the database for this board position.')
                 yield put({ type: SET_ALERT })
+                yield put({ type: CLEAR_GAMES })
             }
         }
 

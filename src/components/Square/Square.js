@@ -20,10 +20,6 @@ const Square = props => {
     const piece = board[from] //Current piece selected
     const targetPiece = board[id]// Piece being targeted on move
 
-    const onSelect = () => {
-        selectPiece(id)
-    }
-
     const tryMovePiece = () => {
         if (piece !== null && piece !== undefined) {
             const pieceColor = piece.toUpperCase() === piece ? 'white' : 'black'
@@ -55,40 +51,84 @@ const Square = props => {
         switch (pieceStr.toLowerCase()) {
             case 'r': type = (
                 <div className={css(styles.piece)} style={data.player === 'black' ? { transform: 'rotate(180deg)' } : {}}>
-                    <i className="fas fa-chess-rook" style={{ color: typeColor }} onClick={() => onSelect()} />
+                    <i className="fas fa-chess-rook" style={{ color: typeColor }} onClick={() => selectPiece(id)} />
                 </div>
             ); break;
             case 'n': type = (
                 <div className={css(styles.piece)} style={data.player === 'black' ? { transform: 'rotate(180deg)' } : {}}>
-                    <i className="fas fa-chess-knight" style={{ color: typeColor }} onClick={() => onSelect()} />
+                    <i className="fas fa-chess-knight" style={{ color: typeColor }} onClick={() => selectPiece(id)} />
                 </div>
             ); break;
             case 'b': type = (
                 <div className={css(styles.piece)} style={data.player === 'black' ? { transform: 'rotate(180deg)' } : {}}>
-                    <i className="fas fa-chess-bishop" style={{ color: typeColor }} onClick={() => onSelect()} />
+                    <i className="fas fa-chess-bishop" style={{ color: typeColor }} onClick={() => selectPiece(id)} />
                 </div>
             ); break;
             case 'q': type = (
                 <div className={css(styles.piece)} style={data.player === 'black' ? { transform: 'rotate(180deg)' } : {}}>
-                    <i className="fas fa-chess-queen" style={{ color: typeColor }} onClick={() => onSelect()} />
+                    <i className="fas fa-chess-queen" style={{ color: typeColor }} onClick={() => selectPiece(id)} />
                 </div>
             ); break;
             case 'k': type = (
                 <div className={css(styles.piece)} style={data.player === 'black' ? { transform: 'rotate(180deg)' } : {}}>
-                    <i className="fas fa-chess-king" style={{ color: typeColor }} onClick={() => onSelect()} />
+                    <i className="fas fa-chess-king" style={{ color: typeColor }} onClick={() => selectPiece(id)} />
                 </div>
             ); break;
             case 'p': type = (
                 <div className={css(styles.piece)} style={data.player === 'black' ? { transform: 'rotate(180deg)' } : {}}>
-                    <i className="fas fa-chess-pawn" style={{ color: typeColor }} onClick={() => onSelect()} />
+                    <i className="fas fa-chess-pawn" style={{ color: typeColor }} onClick={() => selectPiece(id)} />
                 </div>
             ); break;
             default: null
         }
     }
+    /////////////////////////////////////////////
+    //ASSIGN COLORING FOR SELECT AND TEACH MODE//
+    /////////////////////////////////////////////
+    let squareStyle
+    //////SELECT////
+    if (pieceStr && id === board.selected) {
+        //AUTO
+        if (board.toMove === 'white' && data.player === 'white' && pieceStr.toUpperCase() === pieceStr || board.toMove === 'black' && data.player === 'black' && pieceStr.toLowerCase() === pieceStr) {
+            squareStyle = { backgroundColor: 'rgb(55, 146, 203, 0.6)' }
+        }
+        //AUTO OFF
+        else if (!data.panel.auto) {
+            if (board.toMove === 'white' && pieceStr.toUpperCase() === pieceStr || board.toMove === 'black' && pieceStr.toLowerCase() === pieceStr) {
+                squareStyle = { backgroundColor: 'rgb(55, 146, 203, 0.6)' }
+            }
+        }
+    }
+    //TEACHER MODE
+    if (data.panel.teacher && id !== board.selected) {
+        let highlightColor, placesToMove, piecesToMove
+        //AUTO
+        if (data.panel.auto && board.toMove === data.player) {
+            placesToMove = data[data.player].map(move => move.uci.slice(2))
+            piecesToMove = data[data.player].map(move => move.uci.slice(0, 2))
+        }
+        // AUTO OFF
+        else if (!data.panel.auto) {
+            placesToMove = data[board.toMove].map(move => move.uci.slice(2))
+            piecesToMove = data[board.toMove].map(move => move.uci.slice(0, 2))
+        }
+        //ASSIGNMENT OF COLORS
+        if (placesToMove && placesToMove.indexOf(id) !== -1) {
+            // highlightColor = board[id] === null ? '#39ff14' : 'rgba(250,22,6, 1)'
+            squareStyle = { boxShadow: `inset 0 0 1rem #39ff14` }
+        }
+        if (piecesToMove && piecesToMove.indexOf(id) !== -1) {
+            squareStyle = { boxShadow: 'inset 0 0 1rem rgba(239, 250, 27, 1)' }
+        }
+    }
 
     return (
-        <div id={id} className={css(styles.square)} style={{ backgroundColor: squareColor }} onClick={() => tryMovePiece()}>
+        <div
+            id={id}
+            className={css(styles.square)}
+            style={{ backgroundColor: squareColor, ...squareStyle }}
+            onClick={() => tryMovePiece()}
+        >
             {type}
         </div >
     )

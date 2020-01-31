@@ -16,7 +16,6 @@ function isInCheck(toMove, boardMatrix, isKing = true, checkCanKingMove = false)
      * checkCanKingMove necessary to stop the kings coming into contact
      * checkPawnBlock necessary to see if pawn can move forwards into line of check and block
      */
-
     let Y, X, kingPiece
     //IF KING THEN FIND INDEX OF KING
     if (isKing === true) {
@@ -32,7 +31,6 @@ function isInCheck(toMove, boardMatrix, isKing = true, checkCanKingMove = false)
         Y = isKing[0]
         X = isKing[1]
     }
-    isKing !== true && console.log('Y', Y, 'X', X)
 
     const attacks = { diagonal: null, perpendicular: null, knight: null, pawn: null, king: null }
 
@@ -65,7 +63,7 @@ function isInCheck(toMove, boardMatrix, isKing = true, checkCanKingMove = false)
         }
     }
 
-    isKing !== true && console.log('attacks', attacks)
+    // isKing !== true && console.log('attacks', attacks)
     return Object.values(attacks).every(x => x === null) ? false : true
 
 }

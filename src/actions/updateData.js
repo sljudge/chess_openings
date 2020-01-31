@@ -5,6 +5,8 @@ export const TOGGLE_AUTO_HOVER = 'TOGGLE_AUTO_HOVER'
 export const RESET = 'RESET'
 export const SET_ALERT = 'SET_ALERT'
 export const TOGGLE_AUTO = 'TOGGLE_AUTO'
+export const CLEAR_GAMES = 'CLEAR_GAMES'
+export const TOGGLE_TEACHER = 'TOGGLE_TEACHER'
 
 export const updateData = (data) => {
     return ({
@@ -46,4 +48,14 @@ export const setAlert = () => {
     return ({
         type: SET_ALERT
     })
+}
+export const clearGames = () => {
+    return ({
+        type: CLEAR_GAMES
+    })
+}
+export const toggleTeacher = () => {
+    return {
+        type: TOGGLE_TEACHER
+    }
 }

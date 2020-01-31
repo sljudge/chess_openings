@@ -115,12 +115,12 @@ export default StyleSheet.create({
         overflowY: 'scroll',
         maxHeight: '10rem',
         minHeight: '10rem',
-        width: '100%'
+        width: '100%',
+        backgroundColor: 'rgba(256,256,256, 0.1)',
     },
     moveTable: {
         width: '100%',
         borderSpacing: '1rem',
-        backgroundColor: 'rgba(256,256,256, 0.1)',
         maxHeight: '10rem',
         minHeight: '10rem',
         padding: '0 1rem 0 1rem'

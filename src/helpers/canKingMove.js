@@ -22,7 +22,7 @@ export default function canKingMove(toMove, Y, X, boardMatrix) {
             //target is either enemy piece or empty square
             if (targetSquare === 0 || toMove === 'white' && targetSquare === targetSquare.toLowerCase() || toMove === 'black' && targetSquare === targetSquare.toUpperCase()) {
                 //target square is free from check
-                if (isInCheck(toMove, boardMatrix, [y, x], true) === false) { return true }
+                if (isInCheck(toMove, boardMatrix, [y, x, true], true) === false) { return true }
             }
         }
     }

@@ -5,7 +5,9 @@ import {
     TOGGLE_AUTO_HOVER,
     TOGGLE_PLAYER,
     RESET,
-    SET_ALERT
+    SET_ALERT,
+    CLEAR_GAMES,
+    TOGGLE_TEACHER
 } from '../actions/updateData'
 import { initialMoves } from '../data/initialMoves'
 
@@ -22,9 +24,9 @@ const initialState = {
     black: [],
     panel: {
         open: true,
-        auto: false,
+        auto: true,
         autoHover: false,
-        teacher: false
+        teacher: true
     },
     alert: false,
 }
@@ -112,6 +114,28 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 alert: true
+            }
+        // -------------------------------------------------------------------------------
+        case CLEAR_GAMES:
+            const clearMoves = Object.assign({}, state, {
+                white: [],
+                black: [],
+            })
+            const turnOffAuto = Object.assign({}, state.panel, {
+                auto: false
+            })
+            return {
+                ...state,
+                ...clearMoves,
+                panel: turnOffAuto
+            }
+        // -------------------------------------------------------------------------------
+        case TOGGLE_TEACHER:
+            return {
+                ...state,
+                panel: Object.assign({}, state.panel, {
+                    teacher: state.panel.teacher ? false : true
+                })
             }
         // -------------------------------------------------------------------------------
         default:

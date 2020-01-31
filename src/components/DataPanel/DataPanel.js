@@ -4,11 +4,11 @@ import { css } from 'aphrodite'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ActionCreators as UndoActionCreators } from 'redux-undo'
-import { togglePanel, toggleAuto, toggleAutoHover, togglePlayer, reset } from '../../actions/updateData'
+import { togglePanel, toggleAuto, toggleAutoHover, togglePlayer, reset, toggleTeacher } from '../../actions/updateData'
 
 
 const DataPanel = (props) => {
-    const { data, toMove, canUndo, canRedo, undo, redo, togglePanel, toggleAuto, toggleAutoHover, togglePlayer, reset } = { ...props }
+    const { data, toMove, canUndo, canRedo, undo, redo, togglePanel, toggleAuto, togglePlayer, reset, toggleTeacher } = { ...props }
     const panelOpenOrClosed = data.panel.open && styles.panelWrapperOpen
 
     const autoIconOn = (
@@ -17,13 +17,7 @@ const DataPanel = (props) => {
     const autoIconOff = (
         <i className="fas fa-stop-circle" ></i>
     )
-    // const setAutoIcon = () => {
-    //     if (data.panel.auto) {
-    //         return data.panel.autoHover ? autoIconOff : autoIconOn
-    //     } else {
-    //         return data.panel.autoHover ? autoIconOn : autoIconOff
-    //     }
-    // }
+
     const onUndo = () => {
         if (canUndo) {
             undo()
@@ -58,13 +52,13 @@ const DataPanel = (props) => {
                         </div>
                         <div
                             className={css(styles.switch, data.panel.auto ? styles.switchAutoOn : styles.switchAutoOff)}
-
                             onClick={() => toggleAuto()}
                         >
                             {data.panel.auto ? autoIconOn : autoIconOff}
                         </div>
                         <div
                             className={css(styles.switch, data.panel.teacher ? styles.switchTeacherOn : styles.switchTeacherOff)}
+                            onClick={() => toggleTeacher()}
                         >
                             <i className="fas fa-graduation-cap"></i>
                         </div>
@@ -146,6 +140,7 @@ const mapActionsToProps = (dispatch, props) => {
         toggleAuto,
         toggleAutoHover,
         togglePlayer,
+        toggleTeacher,
         reset,
         undo: UndoActionCreators.undo,
         redo: UndoActionCreators.redo

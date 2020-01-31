@@ -21,7 +21,14 @@ const Board = props => {
                                 squareColorStr = column.charCodeAt(0) & 1 ? 'white' : 'black'
                             }
                             let id = `${column}${row}`
-                            return <Square key={id} id={id} squareColorStr={squareColorStr} pieceStr={board[id]} />
+                            return (
+                                <Square
+                                    key={id}
+                                    id={id}
+                                    squareColorStr={squareColorStr}
+                                    pieceStr={board[id]}
+                                />
+                            )
                         })}
                     </div>
 

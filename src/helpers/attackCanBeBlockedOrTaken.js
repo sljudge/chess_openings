@@ -12,7 +12,7 @@ export default function attackCanBeBlockedOrTaken(toMove, Y, X, boardMatrix, att
     const pawn = attacks.pawn
 
     const output = { perpendicular, diagonal, knight, pawn }
-    console.log('input', output.diagonal)
+    console.log('input', output)
 
     const canPawnBlock = (y, x) => {
         //check square is empty
@@ -32,9 +32,10 @@ export default function attackCanBeBlockedOrTaken(toMove, Y, X, boardMatrix, att
     if (perpendicular) {
         y = perpendicular[0]
         x = perpendicular[1]
-        //SEE IF ATTACKING PIECE CAN BE BLOCKED BY PAWN OR TAKEN
+        //SEE IF ATTACKING SQUARE CAN BE BLOCKED BY PAWN OR TAKEN
         if (isInCheck(blockerColor, boardMatrix, [y, x, true]) || canPawnBlock(y, x)) { delete output.perpendicular }
         else {
+            console.log('ENTER')
             //UP
             if (Y < y) {
                 for (let i = y - 1; i > Y; i--) {
