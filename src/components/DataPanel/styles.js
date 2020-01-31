@@ -81,7 +81,7 @@ export default StyleSheet.create({
         }
     },
     switchAutoOn: {
-        backgroundColor: 'rgba(0, 166, 83, 0.5)',
+        backgroundColor: 'rgba(0, 166, 83, 0.9)',
         ':hover': {
             backgroundColor: 'rgba(250,22,6, 0.1)',
         }
@@ -89,11 +89,11 @@ export default StyleSheet.create({
     switchAutoOff: {
         backgroundColor: 'rgba(250,22,6, 0.5)',
         ':hover': {
-            backgroundColor: 'rgba(0, 166, 83, 0.1)',
+            backgroundColor: 'rgba(0, 166, 83, 0.4)',
         }
     },
     switchTeacherOn: {
-        backgroundColor: 'rgba(239, 250, 27, 0.8)',
+        backgroundColor: 'rgba(239, 250, 27, 0.9)',
         ':hover': {
             backgroundColor: 'rgba(239, 250, 27, 0.4)',
         }

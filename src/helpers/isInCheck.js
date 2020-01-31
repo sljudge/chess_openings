@@ -12,7 +12,7 @@ import {
 function isInCheck(toMove, boardMatrix, isKing = true, checkCanKingMove = false) {
     /**
      * If isKing = true then determine if the king is currently in check
-     * else: isKing = [X,Y] to determine if a square can be reached by an opposing piece
+     * else: isKing = [X,Y, [true]] to determine if a square can be reached by an opposing piece (isKing[2] determines if attacking piece can be taken by pawn)
      * checkCanKingMove necessary to stop the kings coming into contact
      * checkPawnBlock necessary to see if pawn can move forwards into line of check and block
      */
@@ -32,6 +32,7 @@ function isInCheck(toMove, boardMatrix, isKing = true, checkCanKingMove = false)
         Y = isKing[0]
         X = isKing[1]
     }
+    isKing !== true && console.log('Y', Y, 'X', X)
 
     const attacks = { diagonal: null, perpendicular: null, knight: null, pawn: null, king: null }
 
@@ -44,8 +45,10 @@ function isInCheck(toMove, boardMatrix, isKing = true, checkCanKingMove = false)
     const knight = checkForKnight(toMove, Y, X, boardMatrix)
     if (knight) { attacks['knight'] = knight }
 
-    const pawn = checkForPawn(toMove, Y, X, boardMatrix)
-    if (pawn) { attacks['pawn'] = pawn }
+    if (isKing === true || isKing[2] === true) {
+        const pawn = checkForPawn(toMove, Y, X, boardMatrix)
+        if (pawn) { attacks['pawn'] = pawn }
+    }
 
     //(KINGS CAN'T COME INTO CONTACT)
     if (isKing === true || checkCanKingMove === true) {
@@ -61,6 +64,8 @@ function isInCheck(toMove, boardMatrix, isKing = true, checkCanKingMove = false)
             alert(`CHECK MATE !!! ${toMove === 'white' ? 'black' : 'white'} wins!!!`)
         }
     }
+
+    isKing !== true && console.log('attacks', attacks)
     return Object.values(attacks).every(x => x === null) ? false : true
 
 }

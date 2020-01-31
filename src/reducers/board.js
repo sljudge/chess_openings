@@ -51,6 +51,7 @@ const reducer = (state = initialState, action) => {
             }
         // -------------------------------------------------------------------------------
         case CASTLE_KING_SIDE:
+            console.log('castle king side', action.to)
             if (!state.disabled) {
                 //WHITE
                 if (action.to === 'g1') {
@@ -80,6 +81,8 @@ const reducer = (state = initialState, action) => {
             }
         // -------------------------------------------------------------------------------
         case CASTLE_QUEEN_SIDE:
+            console.log('castle queen side', action.to)
+
             if (!state.disabled) {
                 //WHITE
                 if (action.to === 'c1') {

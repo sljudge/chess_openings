@@ -8,7 +8,7 @@ import { togglePanel, toggleAuto, toggleAutoHover, togglePlayer, reset } from '.
 
 
 const DataPanel = (props) => {
-    const { data, toMove, canUndo, canRedo, onUndo, onRedo, togglePanel, toggleAuto, toggleAutoHover, togglePlayer, reset } = { ...props }
+    const { data, toMove, canUndo, canRedo, undo, redo, togglePanel, toggleAuto, toggleAutoHover, togglePlayer, reset } = { ...props }
     const panelOpenOrClosed = data.panel.open && styles.panelWrapperOpen
 
     const autoIconOn = (
@@ -24,7 +24,18 @@ const DataPanel = (props) => {
     //         return data.panel.autoHover ? autoIconOn : autoIconOff
     //     }
     // }
-
+    const onUndo = () => {
+        if (canUndo) {
+            undo()
+            data.panel.auto && toggleAuto()
+        }
+    }
+    const onRedo = () => {
+        if (canRedo) {
+            redo()
+            data.panel.auto && toggleAuto()
+        }
+    }
 
     return (
         <>
@@ -110,9 +121,9 @@ const DataPanel = (props) => {
                         </div>
                         {/*-------- HISTORY ------------*/}
                         <div className={css(styles.config)}>
-                            <div className={css(styles.navigator)} onClick={() => canUndo && onUndo()}><i className="fas fa-step-backward"></i></div>
+                            <div className={css(styles.navigator)} onClick={() => onUndo()}><i className="fas fa-step-backward"></i></div>
                             <div className={css(styles.resetBtn)} onClick={() => reset()}>Reset</div>
-                            <div className={css(styles.navigator)} onClick={() => canRedo && onRedo()}><i className="fas fa-step-forward"></i></div>
+                            <div className={css(styles.navigator)} onClick={() => onRedo()}><i className="fas fa-step-forward"></i></div>
                         </div>
                     </div>
                 </div >
@@ -136,8 +147,8 @@ const mapActionsToProps = (dispatch, props) => {
         toggleAutoHover,
         togglePlayer,
         reset,
-        onUndo: UndoActionCreators.undo,
-        onRedo: UndoActionCreators.redo
+        undo: UndoActionCreators.undo,
+        redo: UndoActionCreators.redo
     }, dispatch)
 }
 const mergeProps = (propsFromState, propsFromDispatch, ownProps) => {
